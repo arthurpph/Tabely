@@ -29,6 +29,13 @@ function Player() {
         }
     }
 
+    const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const audio = audioRef.current
+        if(audio){
+            audio.volume = parseFloat(event.target.value) / 100
+        }
+    }
+
     useEffect(() => {
         const audio = audioRef.current;
         if(audio){
@@ -51,11 +58,18 @@ function Player() {
                     <source src={audioTest} type="audio/mpeg"/>
                 </audio>
                 <input 
+                    id="musictimerange"
                     type="range"
                     min="0"
                     max={audioRef.current ? audioRef.current.duration : 100}
                     value={currentTime}
                     onChange={handleTimeChange}
+                />
+                <input 
+                    type="range"
+                    min="0"
+                    max="100"
+                    onChange={handleVolumeChange}
                 />
             </div>
         </div>

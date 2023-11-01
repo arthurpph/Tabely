@@ -21,7 +21,7 @@
     width: 35rem;
 }
 
-.playerinfo input {
+.playerinfo #musictimerange {
     -webkit-appearance: none;
     appearance: none;
     width: 30rem;

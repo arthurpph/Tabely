@@ -1,20 +1,20 @@
 import { Link } from "react-router-dom";
-import '../assets/styles/Login.css'
+import '../assets/styles/Register.css'
 
-function Login() {
+function Register() {
     return (
-        <div className="logincontainer" style={{ fontFamily: 'Inter, sans-serif' }}>
-            <h1>LOGIN</h1>
-            <form action="/login" method="POST" className="loginform">
+        <div className="registercontainer" style={{ fontFamily: 'Inter, sans-serif' }}>
+            <h1>REGISTER</h1>
+            <form action="/register" method="POST" className="registerform">
                 <label htmlFor="nickname">Insira seu nome de usuário</label>
                 <input type="text" name="nickname"/>
                 <label htmlFor="password">Insira sua senha</label>
                 <input type="password" name="password"/>
                 <button type="submit">LOGIN</button>
-                <p>Não tem uma conta? <Link to="/register" style={{textDecoration: 'none'}}>Registre-se</Link></p>         
+                <p>Já tem uma conta? <Link to="/login" style={{textDecoration: 'none'}}>Login</Link></p>         
             </form>
         </div>
     );
 }
 
-export default Login;
+export default Register;
