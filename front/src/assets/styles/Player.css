@@ -14,11 +14,37 @@
 
 .playerinfo {
     display: flex;
-    margin-right: 10rem;
+    margin-right: 20rem;
 }
 
 .playerinfo audio {
     width: 35rem;
+}
+
+.playerinfo input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30rem;
+    height: 0.5rem;
+    margin-top: 1.5rem;
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.4;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.playerinfo input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px; 
+    height: 30px;
+    border-radius: 15px;
+    background: #04AA6D; 
+}
+
+.playerinfo input:hover {
+    opacity: 1;
 }
 
 .playercommands {
@@ -27,7 +53,7 @@
 
 .playercommands button {
     height: 2rem;
-    background-color: inherit;
+    background-color: transparent;
     border: none;
     cursor: pointer;
 }

@@ -1,16 +1,18 @@
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Container from './components/Container'
-import Leftbar from './components/Leftbar'
-import MainTop from './components/MainTop'
-import Player from './components/Player'
+import Main from './pages/Main'
+import Login from './pages/Login'
+import PageNotFound from './pages/PageNotFound'
 
 function App() {
   return (
     <Router>
       <Container>
-        <MainTop/>
-        <Leftbar/>
-        <Player/>
+        <Routes>
+          <Route path="/" element={<Main/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="*" element={<PageNotFound/>}/>
+        </Routes>
       </Container>
     </Router>
   )

@@ -36,6 +36,23 @@
     width: 92rem;
     height: 30rem;
     position: relative;
-    bottom: 0.5rem;
+    bottom: 4rem;
     opacity: 70%;
+    border-radius: 0 0 0 20px;
+}
+
+.login {
+    display: flex;
+    justify-content: right;
+    margin-right: 3rem;
+}
+
+#login {
+    z-index: 1;
+    margin-top: 0.5rem;
+    border-radius: 30px;
+    width: 6rem;
+    height: 1.5rem;
+    background-color: rgb(70, 68, 68);
+    color: white;
 }
