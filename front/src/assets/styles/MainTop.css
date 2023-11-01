@@ -1,0 +1,41 @@
+.searchdiv {
+    margin-left: 30rem;
+}
+
+.searchimg {
+    position: absolute;
+    margin-top: 0.1rem;
+    margin-left: 0.2rem;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#search {
+    position: absolute;
+    width: 15rem;
+    height: 1.5rem;
+    opacity: 10%;
+    border-radius: 20px;
+    border: 0px solid rgba(68, 63, 63, 0.4);
+    padding-left: 1.9rem;
+    z-index: 1;
+    background-color: rgba(68, 63, 63, 0.4);
+    opacity: 100%;
+    color: white;
+}
+
+#search::placeholder {
+    color: white;
+}
+
+.bannerimg {
+    margin-left: 25rem;
+}
+
+#bannerimg {
+    width: 92rem;
+    height: 30rem;
+    position: relative;
+    bottom: 0.5rem;
+    opacity: 70%;
+}

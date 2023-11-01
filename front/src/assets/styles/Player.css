@@ -1,0 +1,47 @@
+.player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.5); /* Sombra sob o player */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.playerinfo {
+    display: flex;
+    margin-right: 10rem;
+}
+
+.playerinfo audio {
+    width: 35rem;
+}
+
+.playercommands {
+    margin-right: 20rem;
+}
+
+.playercommands button {
+    height: 2rem;
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+}
+
+.playercommands img {
+    height: 2rem;
+    margin: 10px;
+}
+
+#musicphoto {
+    margin-left: 2rem;
+}
+
+#tracktime {
+    height: 2rem;
+    margin-top: 0.8rem;
+}

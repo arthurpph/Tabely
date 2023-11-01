@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&family=REM:wght@100;200;300&family=Roboto+Mono&family=Roboto:wght@400;700&display=swap');
+
+.container {
+    position: absolute;
+    color: white;
+    bottom: 18rem;
+}
+
+.flexcolumn {
+    display: flex;
+    flex-direction: column;
+    margin-left: 2rem;
+}
+
+.flexcolumn div img {
+    margin-right: 1rem;
+}
+
+.flex {
+    display: flex;
+    margin: 0.5rem 0rem;
+}
+
+.flex p {
+    font-size: 13px;
+}
+
+.bottom {
+    margin-top: 5rem;
+}
