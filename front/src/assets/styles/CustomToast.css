@@ -1,0 +1,14 @@
+.Toastify__toast--success {
+    background-color: #2d2e2d;
+    border-radius: 20px;
+    color: white;
+}
+
+.Toastify__toast--error {
+    background-color: #f44336;
+    color: white;
+}
+
+.Toastify__toast {
+    border-radius: 8px;
+}
