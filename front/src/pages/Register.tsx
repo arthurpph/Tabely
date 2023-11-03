@@ -41,7 +41,7 @@ function Register() {
             await schema.validate({ name, email, password }, { abortEarly: false });
             setState({ ...state, errors: {} });
 
-            await axios.post('http://localhost:8080/auth/register', {
+            await axios.post(`${process.env.API_URL}/auth/register`, {
                 "name": name,
                 "email": email,
                 "password": password
