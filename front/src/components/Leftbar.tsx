@@ -33,7 +33,7 @@ function Leftbar() {
         <div style={{ fontFamily: 'Inter, sans-serif' }} className="container">
             <div className="top">
                 {jwtTokenName !== '' && (
-                    <p className='welcome'>Bem-vindo {jwtTokenName}</p>
+                    <p className='welcome'>Bem-vindo {jwtTokenName.charAt(0).toUpperCase() + jwtTokenName.slice(1)}</p>
                 )}
                 <div className="flexcolumn">
                     <p>BROWSE</p>
