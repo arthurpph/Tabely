@@ -72,8 +72,8 @@ function Player() {
                     }}><img src={playButton} alt="playButton" /></button>
                     <button><img src={nextTrack} alt="nextTrackButton" /></button>
                 </div>
-                <audio ref={audioRef} preload="auto">
-                    <source src="https://drive.google.com/u/5/uc?id=1QHQs33FPXQHwEftryF8TpAqWDOGdBr_F&export=download" type="audio/mpeg"/>
+                <audio ref={audioRef} preload="metadata">
+                    <source src="https://drive.google.com/u/5/uc?id=1eYI_LYbwtmWlFakB0zP8n4U2iGzMO58q&export=download" type="audio/mpeg"/>
                 </audio>
                 <div className='musicinteraction'>
                     <span>{Math.floor((currentTime % 3600) / 60)}:{Math.floor(currentTime % 60).toString().padStart(2, '0')}</span>
