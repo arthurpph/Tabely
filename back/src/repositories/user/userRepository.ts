@@ -1,8 +1,8 @@
-import { User } from "../entities/user";
-import { userInterface } from "../interfaces/userInterface";
+import { User } from "../../entities/user";
+import { UserInterface } from "../../interfaces/user/userInterface";
 import { MongoClient } from 'mongodb';
 
-export class UserRepository implements userInterface {
+export class UserRepository implements UserInterface {
     constructor(readonly client: MongoClient) {}
 
     async getUsers(): Promise<User[]> {
@@ -16,6 +16,27 @@ export class UserRepository implements userInterface {
                 email: user.email,
                 password: user.password
             }));
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getUser(email: string): Promise<User | null> {
+        try {
+            const db = this.client.db();
+            const usersCollection = db.collection('users');
+
+            const user = await usersCollection.findOne({ email: email });
+
+            if(user) {
+                return {
+                    name: user.name,
+                    email: user.email,
+                    password: user.password
+                };
+            }
+
+            return null;            
         } catch (err) {
             throw err;
         }
