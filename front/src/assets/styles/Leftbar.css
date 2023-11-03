@@ -6,6 +6,11 @@
     bottom: 18rem;
 }
 
+.welcome {
+    margin-left: 7rem;
+    margin-bottom: 2rem;
+}
+
 .flexcolumn {
     display: flex;
     flex-direction: column;
