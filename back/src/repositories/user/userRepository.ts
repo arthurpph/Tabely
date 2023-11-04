@@ -1,4 +1,4 @@
-import { User } from "../../entities/user";
+import { User } from "../../entities/user/user";
 import { UserInterface } from "../../interfaces/user/userInterface";
 import { MongoClient } from 'mongodb';
 

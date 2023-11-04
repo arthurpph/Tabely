@@ -1,4 +1,4 @@
-import { User } from "../../entities/user"
+import { User } from "../../entities/user/user"
 
 export interface AuthInterface {
     login(email: string, password: string): Promise<User>

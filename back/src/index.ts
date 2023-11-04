@@ -4,10 +4,13 @@ import 'dotenv/config';
 import { MongoDatabase } from './drivers/mongoClient';
 import { UserRepository } from './repositories/user/userRepository';
 import { UserService } from './services/user/userService';
-import { UserController } from './controllers/userController';
+import { UserController } from './controllers/user/userController';
 import { AuthRepository } from './repositories/auth/authRepository';
 import { AuthService } from './services/auth/authService';
-import { AuthController } from './controllers/authController';
+import { AuthController } from './controllers/auth/authController';
+import { MusicRepository } from './repositories/music/musicRepository';
+import { MusicService } from './services/music/musicService';
+import { MusicController } from './controllers/music/musicController';
 
 const app: express.Application = express();
 
@@ -39,10 +42,16 @@ const authRepository: AuthRepository = new AuthRepository(mongoDatabase.getClien
 const authService: AuthService = new AuthService(authRepository);
 const authController: AuthController = new AuthController(authService);
 
+const musicRepository: MusicRepository = new MusicRepository(mongoDatabase.getClient());
+const musicService: MusicService = new MusicService(musicRepository);
+const musicController: MusicController = new MusicController(musicService);
+
 app.get('/users', (req, res) => userController.getAllUsers(req, res));
 app.post('/users', (req, res) => userController.addUser(req, res));
 
 app.get('/user', (req, res) => userController.getUser(req, res));
+
+app.get('/musics', (req, res) => musicController.getMusics(req, res));
 
 app.post('/auth/login', (req, res) => authController.login(req, res));
 app.post('/auth/register', (req, res) => authController.register(req, res));

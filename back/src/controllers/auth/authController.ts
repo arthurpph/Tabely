@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthService } from '../services/auth/authService';
+import { AuthService } from '../../services/auth/authService';
 
 export class AuthController {
     constructor(readonly authService: AuthService) {}

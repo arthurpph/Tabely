@@ -2,7 +2,7 @@ import axios from 'axios';
 import bcrypt from 'bcrypt';
 import { MongoClient } from "mongodb";
 import { AuthInterface } from "../../interfaces/auth/authInterface";
-import { User } from '../../entities/user';
+import { User } from '../../entities/user/user';
 
 export class AuthRepository implements AuthInterface {
     constructor(readonly client: MongoClient) {}
