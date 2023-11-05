@@ -140,7 +140,16 @@ function Player() {
             });
 
             audio.addEventListener('error', () => {
+                const currentTimeTemp = currentTime;
                 audio.load();
+                const updateTime = () => {
+                    if(audio.readyState === 4) {
+                        setCurrentTime(currentTimeTemp);
+                    } else {
+                        setTimeout(() => updateTime(), 1000)
+                    }
+                }
+                updateTime();
             });
 
             buildQueue();
