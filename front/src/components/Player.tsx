@@ -3,15 +3,25 @@ import axios from 'axios';
 import playButton from '../assets/images/PlayButton.png'
 import previousTrack from '../assets/images/Polygon 2-1.png'
 import nextTrack from '../assets/images/Polygon 2.png'
-import musicTest from '../assets/images/music test.png'
 import '../assets/styles/Player.css'
+
+interface MusicStructure {
+    name: string,
+    artist: string,
+    imageURL: string,
+    musicURL: string,
+    duration: string
+}
 
 function Player() {
     const [currentTime, setCurrentTime] = useState(0);
-    const [queue, setQueue] = useState<{ name: string, artist: string, musicURL: string, duration: string }[]>([]);
+    const [queue, setQueue] = useState<MusicStructure[]>([]);
+    const [previousMusics, setPreviousMusics] = useState<MusicStructure[]>([]);
+    const [currentMusic, setCurrentMusic] = useState<MusicStructure>();
     const [musicName, setMusicName] = useState('');
     const [musicDuration, setMusicDuration] = useState('');
-    const [stage, setStage] = useState<boolean>(false);
+    const [musicImage, setMusicImage] = useState('');
+    const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const buildQueue = async () => {
@@ -24,6 +34,7 @@ function Player() {
             newQueue.push({
                 name: data[randomIndex].name,
                 artist: data[randomIndex].artist,
+                imageURL: data[randomIndex].imageURL,
                 musicURL: data[randomIndex].musicURL,
                 duration: data[randomIndex].duration
             });
@@ -36,11 +47,15 @@ function Player() {
         const audio = audioRef.current
         if(audio){
             if(!audio.src) {
-                nextMusic();
+                goToNextMusic();
             }
 
-            if(audio.paused) audio.play();
-            else audio.pause();
+            if(audio.paused) {
+                audio.play();
+            }
+            else {
+                audio.pause();
+            }
         }
     }
 
@@ -58,14 +73,58 @@ function Player() {
         }
     }
 
-    const nextMusic = () => {
+    const goToNextMusic = () => {
         const audio = audioRef.current;
         if(audio && queue.length > 0) {
+            if(firstMusicSetup) setPreviousMusicsFunction();
             audio.src = queue[0].musicURL;
+            setMusicImage(queue[0].imageURL);
             setMusicName(queue[0].name);
             setMusicDuration(queue[0].duration);
             setCurrentTime(audio.currentTime);
+            setCurrentMusic({
+                name: queue[0].name,
+                artist: queue[0].artist,
+                imageURL: queue[0].imageURL,
+                musicURL: queue[0].musicURL,
+                duration: queue[0].duration
+            });
             setQueue(queue.length > 1 ? [...queue.slice(1)] : []);
+        } else {
+            console.error('Queue empty');
+        }
+    }
+
+    const goToPreviousMusic = () => {
+        const audio = audioRef.current;
+        if(audio) {
+            if(currentTime >= 1) {
+                setCurrentTime(0);
+                audio.currentTime = 0;
+                return;
+            }
+
+            const previousMusic = previousMusics.pop();
+
+            if(previousMusic !== undefined) {
+                audio.src = previousMusic.musicURL;
+                setMusicImage(previousMusic.imageURL);
+                setMusicName(previousMusic.name);
+                setMusicDuration(previousMusic.duration);
+                setCurrentTime(0);
+            }
+        }
+    }
+
+    const setPreviousMusicsFunction = () => {
+        if(currentMusic) {
+            setPreviousMusics([...previousMusics, {
+                name: currentMusic.name,
+                artist: currentMusic.artist,
+                imageURL: currentMusic.imageURL,
+                musicURL: currentMusic.musicURL,
+                duration: currentMusic.duration
+            }]);
         }
     }
 
@@ -80,6 +139,10 @@ function Player() {
                 audio.play();
             });
 
+            audio.addEventListener('error', () => {
+                audio.load();
+            });
+
             buildQueue();
         }
     }, []);
@@ -88,25 +151,26 @@ function Player() {
         const audio = audioRef.current;
         if(audio && queue.length > 0){
             audio.addEventListener('ended', () => {
-                nextMusic();
+                setPreviousMusicsFunction();
+                goToNextMusic();
             });
 
-            if(!stage) {
-                nextMusic()
-                setStage(true)
+            if(!firstMusicSetup) {
+                goToNextMusic();
+                setFirstMusicSetup(true);
             }
         }
     }, [queue])
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>
-            <img src={musicTest} alt="musicTest" id="musicphoto"/>
-            <p>{musicName}</p>
+            <img src={musicImage} alt="musicTest" className="musicphoto"/>
+            <p className='musicname'>{musicName}</p>
             <div className="playerinfo">
                 <div className='playercommands'>
-                    <button><img src={previousTrack} alt="previousTrackButton" style={{ width: '1rem', height: '1rem' }}/></button>
-                    <button onClick={handlePlayPause}><img src={playButton} alt="playButton" /></button>
-                    <button><img src={nextTrack} alt="nextTrackButton" style={{ width: '1rem', height: '1rem' }}/></button>
+                    <button onClick={goToPreviousMusic}><img src={previousTrack} id='musiccontrollerbutton' alt="previousTrackButton"/></button>
+                    <button onClick={handlePlayPause}><img src={playButton} alt="playButton"/></button>
+                    <button onClick={goToNextMusic}><img src={nextTrack} id='musiccontrollerbutton' alt="nextTrackButton"/></button>
                 </div>
                 <audio ref={audioRef} preload="metadata">
                     <source type="audio/mpeg"/>

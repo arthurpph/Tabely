@@ -36,7 +36,7 @@ function Leftbar() {
                     <p className='welcome'>Bem-vindo {jwtTokenName.charAt(0).toUpperCase() + jwtTokenName.slice(1)}</p>
                 )}
                 <div className="flexcolumn">
-                    <p>BROWSE</p>
+                    <p>Browse</p>
                     <div className="flex">
                         <img src={searchImg} alt="searchImg"/>
                         <p>DISCOVER</p>
@@ -57,7 +57,7 @@ function Leftbar() {
             </div>
             <div className="bottom">
                 <div className="flexcolumn">
-                    <p>LIBRARY</p>
+                    <p>Library</p>
                     <div className="flex">
                         <img src={starImg} alt="starImg"/>
                         <p>FAVOURITES</p>
