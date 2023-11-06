@@ -1,14 +1,39 @@
+:root {
+    --toastify-icon-color-error: black;
+    --toastify-font-family: 'Inter, sans-serif';
+    --toastify-font-size: 100px;
+    --toastify-toast-min-height: 2rem;
+    --toastify-color-progress-error: linear-gradient(
+        to right,
+        #f02a1c,
+        #ff5f33,
+        #ff8733,
+        #ffb733,
+        #ffc733,
+        #ffd866
+    );
+
+    --toastify-color-progress-success: linear-gradient(
+        to right,
+        #4cd964,
+        #5afa5a,
+        #69dc34,
+        #21ce47,
+        #2eb82e,
+        #d6c02b
+    );
+}
+
 .Toastify__toast--success {
     background-color: #2d2e2d;
-    border-radius: 20px;
     color: white;
 }
 
 .Toastify__toast--error {
-    background-color: #f44336;
+    background-color: #f02a1c;
     color: white;
 }
 
 .Toastify__toast {
-    border-radius: 8px;
+    border-radius: 20px;
 }

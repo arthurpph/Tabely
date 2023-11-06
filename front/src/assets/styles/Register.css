@@ -32,4 +32,6 @@
 .registerform button {
     margin-top: 40px;
     border-radius: 5px;
+    width: 7.5rem;
+    height: 1.5rem;
 }

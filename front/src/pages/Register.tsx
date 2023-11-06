@@ -109,7 +109,7 @@ function Register() {
                     onChange={handleChange}
                 />
                 <span className="error">{state.errors.password}</span>
-                <button type="submit">LOGIN</button>
+                <button type="submit">CADASTRAR</button>
                 <p>Já tem uma conta? <Link to="/login" style={{textDecoration: 'none'}}>Login</Link></p>         
             </form>
         </div>
