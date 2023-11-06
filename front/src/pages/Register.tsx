@@ -59,9 +59,12 @@ function Register() {
             toast.success('Usuário registrado');
             navigate('/login');
         } catch (error: any) {
-            if(error.response.status === 409) {
-                toast.error('Usuário já registrado com este email');
-                return;
+            const errorResponse = error.response;
+            if(errorResponse) {
+                if(errorResponse.status === 409) {
+                    toast.error('Usuário já registrado com este email');
+                    return;
+                }
             }
 
             const errors: Record<string, string> = {};
