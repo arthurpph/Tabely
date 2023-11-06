@@ -22,7 +22,7 @@ function Player() {
     const [musicName, setMusicName] = useState<string>('');
     const [musicDuration, setMusicDuration] = useState<string>('');
     const [musicImage, setMusicImage] = useState<string>('');
-    const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(false);
+    const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const buildQueue = async () => {
@@ -77,8 +77,26 @@ function Player() {
 
     const goToNextMusic = () => {
         const audio = audioRef.current;
+
+        if(previousMusicsCounter > 2) {
+            const nextMusic = previousMusics[previousMusics.length - (previousMusicsCounter - 2)];
+            if(audio && nextMusic) {
+                setPreviousMusicsCounter(previousMusicsCounter - 1);
+                audio.src = nextMusic.musicURL;
+                audio.currentTime = 0;
+                setMusicImage(nextMusic.imageURL);
+                setMusicName(nextMusic.name);
+                setMusicDuration(nextMusic.duration);
+            }
+
+            return;
+        }
+
         if(audio && queue.length > 0) {
-            if(firstMusicSetup) setPreviousMusicsFunction();
+            if(!firstMusicSetup) {
+                setPreviousMusicsFunction();
+            }
+
             const queueFirstMusic = queue[0];
             audio.src = queueFirstMusic.musicURL;
             setMusicImage(queueFirstMusic.imageURL);
@@ -93,10 +111,12 @@ function Player() {
                 duration: queueFirstMusic.duration
             });
             setQueue(queue.length > 1 ? [...queue.slice(1)] : []);
+
             if(previousMusicsCounter > 1) {
                 setPreviousMusicsCounter(previousMusicsCounter - 1);
             }
-        } else {
+        } 
+        else {
             console.error('Queue empty');
         }
     }
@@ -105,20 +125,19 @@ function Player() {
         const audio = audioRef.current;
         if(audio) {
             if(currentTime >= 1) {
-                setCurrentTime(0);
                 audio.currentTime = 0;
                 return;
             }
 
             const previousMusic = previousMusics[previousMusics.length - previousMusicsCounter];
-            setPreviousMusicsCounter(previousMusicsCounter + 1);
             
-            if(previousMusic !== undefined) {
+            if(previousMusic) {
+                setPreviousMusicsCounter(previousMusicsCounter + 1);
                 audio.src = previousMusic.musicURL;
+                audio.currentTime = 0;
                 setMusicImage(previousMusic.imageURL);
                 setMusicName(previousMusic.name);
                 setMusicDuration(previousMusic.duration);
-                setCurrentTime(0);
             }
         }
     }
@@ -132,6 +151,15 @@ function Player() {
                 musicURL: currentMusic.musicURL,
                 duration: currentMusic.duration
             }]);
+        }
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+        if(event.key === 'MediaTrackPrevious') {
+            goToPreviousMusic();
+        } 
+        else if(event.key === 'MediaTrackNext') {
+            goToNextMusic();
         }
     }
 
@@ -162,12 +190,22 @@ function Player() {
                 goToNextMusic();
             });
 
-            if(!firstMusicSetup) {
+            if(firstMusicSetup) {
                 goToNextMusic();
-                setFirstMusicSetup(true);
+                setFirstMusicSetup(false);
             }
         }
+
+        
     }, [queue]);
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        }
+    }, [queue, previousMusicsCounter, currentTime])
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>
