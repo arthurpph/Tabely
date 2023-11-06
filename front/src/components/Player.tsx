@@ -14,13 +14,14 @@ interface MusicStructure {
 }
 
 function Player() {
-    const [currentTime, setCurrentTime] = useState(0);
+    const [currentTime, setCurrentTime] = useState<number>(0);
     const [queue, setQueue] = useState<MusicStructure[]>([]);
     const [previousMusics, setPreviousMusics] = useState<MusicStructure[]>([]);
+    const [previousMusicsCounter, setPreviousMusicsCounter] = useState<number>(1);
     const [currentMusic, setCurrentMusic] = useState<MusicStructure>();
-    const [musicName, setMusicName] = useState('');
-    const [musicDuration, setMusicDuration] = useState('');
-    const [musicImage, setMusicImage] = useState('');
+    const [musicName, setMusicName] = useState<string>('');
+    const [musicDuration, setMusicDuration] = useState<string>('');
+    const [musicImage, setMusicImage] = useState<string>('');
     const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(false);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -31,12 +32,13 @@ function Player() {
 
         for(let i = 0; i < 10; i++) {
             const randomIndex = Math.floor(Math.random() * data.length);
+            const randomMusic = data[randomIndex];
             newQueue.push({
-                name: data[randomIndex].name,
-                artist: data[randomIndex].artist,
-                imageURL: data[randomIndex].imageURL,
-                musicURL: data[randomIndex].musicURL,
-                duration: data[randomIndex].duration
+                name: randomMusic.name,
+                artist: randomMusic.artist,
+                imageURL: randomMusic.imageURL,
+                musicURL: randomMusic.musicURL,
+                duration: randomMusic.duration
             });
         }
 
@@ -77,19 +79,23 @@ function Player() {
         const audio = audioRef.current;
         if(audio && queue.length > 0) {
             if(firstMusicSetup) setPreviousMusicsFunction();
-            audio.src = queue[0].musicURL;
-            setMusicImage(queue[0].imageURL);
-            setMusicName(queue[0].name);
-            setMusicDuration(queue[0].duration);
+            const queueFirstMusic = queue[0];
+            audio.src = queueFirstMusic.musicURL;
+            setMusicImage(queueFirstMusic.imageURL);
+            setMusicName(queueFirstMusic.name);
+            setMusicDuration(queueFirstMusic.duration);
             setCurrentTime(audio.currentTime);
             setCurrentMusic({
-                name: queue[0].name,
-                artist: queue[0].artist,
-                imageURL: queue[0].imageURL,
-                musicURL: queue[0].musicURL,
-                duration: queue[0].duration
+                name: queueFirstMusic.name,
+                artist: queueFirstMusic.artist,
+                imageURL: queueFirstMusic.imageURL,
+                musicURL: queueFirstMusic.musicURL,
+                duration: queueFirstMusic.duration
             });
             setQueue(queue.length > 1 ? [...queue.slice(1)] : []);
+            if(previousMusicsCounter > 1) {
+                setPreviousMusicsCounter(previousMusicsCounter - 1);
+            }
         } else {
             console.error('Queue empty');
         }
@@ -104,8 +110,9 @@ function Player() {
                 return;
             }
 
-            const previousMusic = previousMusics.pop();
-
+            const previousMusic = previousMusics[previousMusics.length - previousMusicsCounter];
+            setPreviousMusicsCounter(previousMusicsCounter + 1);
+            
             if(previousMusic !== undefined) {
                 audio.src = previousMusic.musicURL;
                 setMusicImage(previousMusic.imageURL);
@@ -140,16 +147,7 @@ function Player() {
             });
 
             audio.addEventListener('error', () => {
-                const currentTimeTemp = currentTime;
                 audio.load();
-                const updateTime = () => {
-                    if(audio.readyState === 4) {
-                        setCurrentTime(currentTimeTemp);
-                    } else {
-                        setTimeout(() => updateTime(), 1000)
-                    }
-                }
-                updateTime();
             });
 
             buildQueue();
@@ -169,7 +167,7 @@ function Player() {
                 setFirstMusicSetup(true);
             }
         }
-    }, [queue])
+    }, [queue]);
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>

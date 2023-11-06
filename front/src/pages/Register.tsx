@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from 'yup';
 import axios from 'axios';
@@ -20,7 +20,9 @@ function Register() {
         errors: {}
     }
 
-    const [state, setState] = useState(initialState)
+    const [state, setState] = useState(initialState);
+    const [promiseInProgress, setPromiseInProgress] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     const schema = yup.object().shape({
         name: yup.string().required('O nome é obrigatório'),
@@ -35,9 +37,16 @@ function Register() {
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        
+        if(promiseInProgress) {
+            return;
+        }
+
         const { name, email, password } = state;
 
         try {
+            setPromiseInProgress(true);
+
             await schema.validate({ name, email, password }, { abortEarly: false });
             setState({ ...state, errors: {} });
 
@@ -46,8 +55,9 @@ function Register() {
                 "email": email,
                 "password": password
             });
-            
-            toast.success('Usuário registrado com sucesso')
+
+            toast.success('Usuário registrado');
+            navigate('/login');
         } catch (error: any) {
             const errors: Record<string, string> = {};
 
@@ -58,6 +68,8 @@ function Register() {
             });
 
             setState({ ...state, errors: errors });
+        } finally {
+            setPromiseInProgress(false);
         }
     }
 
