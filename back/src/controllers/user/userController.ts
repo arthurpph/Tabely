@@ -15,12 +15,12 @@ export class UserController {
         }
     }
 
-    async getUser(req: Request, res: Response) {
+    async getUserByEmail(req: Request, res: Response) {
         try {
             const email = req.query.email;
 
             if(typeof email === 'string') {
-                const user = await this.userService.getUser(email);
+                const user = await this.userService.getUserByEmail(email);
 
                 res.json(user);
             } else {

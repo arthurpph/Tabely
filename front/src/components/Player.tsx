@@ -14,11 +14,10 @@ interface MusicStructure {
 }
 
 function Player() {
-    const [currentTime, setCurrentTime] = useState<number>(0);
     const [queue, setQueue] = useState<MusicStructure[]>([]);
-    const [previousMusics, setPreviousMusics] = useState<MusicStructure[]>([]);
-    const [previousMusicsCounter, setPreviousMusicsCounter] = useState<number>(1);
-    const [currentMusic, setCurrentMusic] = useState<MusicStructure>();
+    const [reproducedMusics, setReproducedMusics] = useState<MusicStructure[]>([]);
+    const [currentMusicIndex, setCurrentMusicIndex] = useState<number>(-1);
+    const [currentTime, setCurrentTime] = useState<number>(0);
     const [musicName, setMusicName] = useState<string>('');
     const [musicDuration, setMusicDuration] = useState<string>('');
     const [musicImage, setMusicImage] = useState<string>('');
@@ -51,7 +50,8 @@ function Player() {
             if(!audio.src) {
                 goToNextMusic();
             }
-
+            console.log(reproducedMusics)
+            console.log(currentMusicIndex)
             if(audio.paused) {
                 audio.play();
             }
@@ -77,47 +77,31 @@ function Player() {
 
     const goToNextMusic = () => {
         const audio = audioRef.current;
+        let nextMusic;
 
-        if(previousMusicsCounter > 2) {
-            const nextMusic = previousMusics[previousMusics.length - (previousMusicsCounter - 2)];
-            if(audio && nextMusic) {
-                setPreviousMusicsCounter(previousMusicsCounter - 1);
-                audio.src = nextMusic.musicURL;
-                audio.currentTime = 0;
-                setMusicImage(nextMusic.imageURL);
-                setMusicName(nextMusic.name);
-                setMusicDuration(nextMusic.duration);
-            }
-
-            return;
+        if(currentMusicIndex !== reproducedMusics.length - 1) {
+            const currentMusicIndexScope: number = currentMusicIndex + 1;
+            setCurrentMusicIndex(currentMusicIndexScope);
+            nextMusic = reproducedMusics[currentMusicIndexScope];
+        } else if(queue.length > 0) {
+            nextMusic = queue[0];
+            setReproducedMusics([...reproducedMusics, {
+                name: nextMusic.name,
+                artist: nextMusic.artist,
+                imageURL: nextMusic.imageURL,
+                musicURL: nextMusic.musicURL,
+                duration: nextMusic.duration
+            }]);
+            setQueue(queue.length > 1 ? [...queue.slice(1)] : []);
         }
 
-        if(audio && queue.length > 0) {
-            if(!firstMusicSetup) {
-                setPreviousMusicsFunction();
-            }
-
-            const queueFirstMusic = queue[0];
-            audio.src = queueFirstMusic.musicURL;
-            setMusicImage(queueFirstMusic.imageURL);
-            setMusicName(queueFirstMusic.name);
-            setMusicDuration(queueFirstMusic.duration);
+        if(audio && nextMusic) {
+            audio.src = nextMusic.musicURL;
+            setMusicImage(nextMusic.imageURL);
+            setMusicName(nextMusic.name);
+            setMusicDuration(nextMusic.duration);
             setCurrentTime(audio.currentTime);
-            setCurrentMusic({
-                name: queueFirstMusic.name,
-                artist: queueFirstMusic.artist,
-                imageURL: queueFirstMusic.imageURL,
-                musicURL: queueFirstMusic.musicURL,
-                duration: queueFirstMusic.duration
-            });
-            setQueue(queue.length > 1 ? [...queue.slice(1)] : []);
-
-            if(previousMusicsCounter > 1) {
-                setPreviousMusicsCounter(previousMusicsCounter - 1);
-            }
-        } 
-        else {
-            console.error('Queue empty');
+            setCurrentMusicIndex(currentMusicIndex + 1);
         }
     }
 
@@ -129,28 +113,22 @@ function Player() {
                 return;
             }
 
-            const previousMusic = previousMusics[previousMusics.length - previousMusicsCounter];
+            if(currentMusicIndex === 0) {
+                return;
+            }
+
+            let currentMusicIndexScope: number = currentMusicIndex - 1;
+            setCurrentMusicIndex(currentMusicIndexScope);
             
+            const previousMusic = reproducedMusics[currentMusicIndexScope];
+
             if(previousMusic) {
-                setPreviousMusicsCounter(previousMusicsCounter + 1);
                 audio.src = previousMusic.musicURL;
                 audio.currentTime = 0;
                 setMusicImage(previousMusic.imageURL);
                 setMusicName(previousMusic.name);
                 setMusicDuration(previousMusic.duration);
             }
-        }
-    }
-
-    const setPreviousMusicsFunction = () => {
-        if(currentMusic) {
-            setPreviousMusics([...previousMusics, {
-                name: currentMusic.name,
-                artist: currentMusic.artist,
-                imageURL: currentMusic.imageURL,
-                musicURL: currentMusic.musicURL,
-                duration: currentMusic.duration
-            }]);
         }
     }
 
@@ -186,7 +164,6 @@ function Player() {
         const audio = audioRef.current;
         if(audio && queue.length > 0){
             audio.addEventListener('ended', () => {
-                setPreviousMusicsFunction();
                 goToNextMusic();
             });
 
@@ -194,9 +171,10 @@ function Player() {
                 goToNextMusic();
                 setFirstMusicSetup(false);
             }
+        } 
+        else if(queue.length === 0) {
+            buildQueue();
         }
-
-        
     }, [queue]);
 
     useEffect(() => {
@@ -205,7 +183,7 @@ function Player() {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         }
-    }, [queue, previousMusicsCounter, currentTime])
+    }, [queue, currentTime])
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>

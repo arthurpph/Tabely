@@ -21,7 +21,7 @@ export class UserRepository implements UserInterface {
         }
     }
 
-    async getUser(email: string): Promise<User | null> {
+    async getUserByEmail(email: string): Promise<User | null> {
         try {
             const db = this.client.db();
             const usersCollection = db.collection('users');

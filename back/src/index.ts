@@ -49,7 +49,7 @@ const musicController: MusicController = new MusicController(musicService);
 app.get('/users', (req, res) => userController.getAllUsers(req, res));
 app.post('/users', (req, res) => userController.addUser(req, res));
 
-app.get('/user', (req, res) => userController.getUser(req, res));
+app.get('/user', (req, res) => userController.getUserByEmail(req, res));
 
 app.get('/musics', (req, res) => musicController.getMusics(req, res));
 

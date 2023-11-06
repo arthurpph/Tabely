@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
 import 'dotenv/config'
 import { AuthInterface } from "../../interfaces/auth/authInterface";
 import { LoginResponse } from "../../interfaces/auth/loginInterface";
@@ -28,6 +29,7 @@ export class AuthService {
                     response: 'Senha incorreta'
                 }
             }
+
             return {
                 success: true,
                 response: 'Login realizado',
@@ -40,6 +42,16 @@ export class AuthService {
 
     async register(name: string, email: string, password: string): Promise<string> {
         try {
+            const emailValidation = await axios.get(`${process.env.API_URL}/user`, {
+                params: {
+                    email: email
+                }
+            });
+
+            if(emailValidation.data !== null) {
+                return "Usuário com este email já existente";
+            }
+
             return await this.authRepository.register(name, email, password);
         } catch (err) {
             throw err;

@@ -8,8 +8,8 @@ export class UserService {
         return await this.userRepository.getUsers();
     }
 
-    async getUser(email: string): Promise<User | null> {
-        return await this.userRepository.getUser(email)
+    async getUserByEmail(email: string): Promise<User | null> {
+        return await this.userRepository.getUserByEmail(email)
     }
 
     async createUser(user: User): Promise<User> {
