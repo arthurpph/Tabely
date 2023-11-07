@@ -187,7 +187,7 @@ function Player() {
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>
-            <img src={musicImage} alt="musicTest" className="musicphoto"/>
+            <img src={musicImage} alt="musicImage" className="musicphoto"/>
             <p className='musicname'>{musicName}</p>
             <div className="playerinfo">
                 <div className='playercommands'>
