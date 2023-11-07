@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { TailSpin } from 'react-loader-spinner';
 import * as yup from 'yup';
 import axios from 'axios';
 import '../assets/styles/Register.css';
@@ -110,7 +111,18 @@ function Register() {
                 />
                 <span className="error">{state.errors.password}</span>
                 <button type="submit">CADASTRAR</button>
-                <p>Já tem uma conta? <Link to="/login" style={{textDecoration: 'none'}}>Login</Link></p>         
+                <p>Já tem uma conta? <Link to="/login" style={{textDecoration: 'none'}}>Login</Link></p>
+                <div>{promiseInProgress && <TailSpin
+                    height="80"
+                    width="80"
+                    color="#808080"
+                    ariaLabel="tail-spin-loading"
+                    radius="1"
+                    wrapperStyle={{}}
+                    wrapperClass=""
+                    visible={true}
+                    />}
+                </div>     
             </form>
         </div>
     );
