@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import playButton from '../assets/images/PlayButton.png'
-import previousTrack from '../assets/images/Polygon 2-1.png'
-import nextTrack from '../assets/images/Polygon 2.png'
-import '../assets/styles/Player.css'
+import playButton from '../assets/images/PlayButton.png';
+import previousTrack from '../assets/images/Polygon 2-1.png';
+import nextTrack from '../assets/images/Polygon 2.png';
+import '../assets/styles/Player.css';
 
 interface MusicStructure {
     name: string,
@@ -50,8 +50,7 @@ function Player() {
             if(!audio.src) {
                 goToNextMusic();
             }
-            console.log(reproducedMusics)
-            console.log(currentMusicIndex)
+
             if(audio.paused) {
                 audio.play();
             }
