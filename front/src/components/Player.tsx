@@ -50,8 +50,7 @@ function Player() {
             if(!audio.src) {
                 goToNextMusic();
             }
-            console.log(reproducedMusics)
-            console.log(currentMusicIndex)
+
             if(audio.paused) {
                 audio.play();
             }
