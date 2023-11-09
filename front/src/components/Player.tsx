@@ -20,6 +20,7 @@ function Player() {
     const [reproducedMusics, setReproducedMusics] = useState<MusicStructure[]>([]);
     const [currentMusicIndex, setCurrentMusicIndex] = useState<number>(-1);
     const [currentTime, setCurrentTime] = useState<number>(0);
+    const [currentVolume, setCurrentVolume] = useState<number>(0);
     const [musicName, setMusicName] = useState<string>('');
     const [musicDuration, setMusicDuration] = useState<string>('');
     const [musicImage, setMusicImage] = useState<string>('');
@@ -76,17 +77,20 @@ function Player() {
         }
     }
 
-    const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const audio = audioRef.current
+    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const audio = audioRef.current;
         if(audio){
-            audio.currentTime = parseFloat(event.target.value)
+            audio.currentTime = parseFloat(e.target.value);
         }
     }
 
-    const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const audio = audioRef.current
+    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const audio = audioRef.current;
+        const value = parseFloat(e.target.value) / 100;
+        localStorage.setItem('MusicVolume', value.toString());
+        setCurrentVolume(parseFloat(e.target.value))
         if(audio){
-            audio.volume = parseFloat(event.target.value) / 100
+            audio.volume = value;
         }
     }
 
@@ -174,6 +178,17 @@ function Player() {
             });
 
             buildQueue();
+
+            const musicVolume = localStorage.getItem('MusicVolume');
+
+            if(musicVolume) {
+                audio.volume = parseFloat(musicVolume);
+                setCurrentVolume(audio.volume * 100);
+            } 
+            else {
+                audio.volume = 0.5;
+                setCurrentVolume(40);
+            }
         }
     }, []);
 
@@ -232,6 +247,7 @@ function Player() {
                         type="range"
                         min="0"
                         max="100"
+                        value={currentVolume}
                         onChange={handleVolumeChange}
                     />
                 </div>
