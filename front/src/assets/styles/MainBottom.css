@@ -4,3 +4,22 @@
     color: white;
     margin-left: 30rem;
 }
+
+.musicstab {
+    display: flex;
+    gap: 8rem;
+}
+
+.music {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.music img {
+    width: 10rem;
+    height: 8rem;
+    border-radius: 30px;
+}
+
+

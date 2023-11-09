@@ -5,13 +5,15 @@ import previousTrack from '../assets/images/Polygon 2-1.png';
 import nextTrack from '../assets/images/Polygon 2.png';
 import '../assets/styles/Player.css';
 
-interface MusicStructure {
+export interface MusicStructure {
     name: string,
     artist: string,
     imageURL: string,
     musicURL: string,
     duration: string
 }
+
+let setMusic: (music: MusicStructure) => void;
 
 function Player() {
     const [queue, setQueue] = useState<MusicStructure[]>([]);
@@ -24,24 +26,38 @@ function Player() {
     const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    const buildQueue = async () => {
-        const musics = await axios.get(`${import.meta.env.VITE_API_URL}/musics`);
-        const data = musics.data;
-        const newQueue = [...queue];
-
-        for(let i = 0; i < 10; i++) {
-            const randomIndex = Math.floor(Math.random() * data.length);
-            const randomMusic = data[randomIndex];
-            newQueue.push({
-                name: randomMusic.name,
-                artist: randomMusic.artist,
-                imageURL: randomMusic.imageURL,
-                musicURL: randomMusic.musicURL,
-                duration: randomMusic.duration
-            });
+    setMusic = (music: MusicStructure): void => {
+        const audio = audioRef.current;
+        if(audio) {
+            audio.src = music.musicURL;
+            setMusicImage(music.imageURL);
+            setMusicName(music.name);
+            setMusicDuration(music.duration);
         }
+    }
 
-        setQueue(newQueue);
+    const buildQueue = async () => {
+        try {
+            const musics = await axios.get(`${import.meta.env.VITE_API_URL}/musics`);
+            const data = musics.data;
+            const newQueue = [...queue];
+
+            for(let i = 0; i < 10; i++) {
+                const randomIndex = Math.floor(Math.random() * data.length);
+                const randomMusic = data[randomIndex];
+                newQueue.push({
+                    name: randomMusic.name,
+                    artist: randomMusic.artist,
+                    imageURL: randomMusic.imageURL,
+                    musicURL: randomMusic.musicURL,
+                    duration: randomMusic.duration
+                });
+            }
+
+            setQueue(newQueue);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     const handlePlayPause = () => {
@@ -116,7 +132,7 @@ function Player() {
                 return;
             }
 
-            let currentMusicIndexScope: number = currentMusicIndex - 1;
+            const currentMusicIndexScope: number = currentMusicIndex - 1;
             setCurrentMusicIndex(currentMusicIndexScope);
             
             const previousMusic = reproducedMusics[currentMusicIndexScope];
@@ -134,8 +150,10 @@ function Player() {
     const handleKeyDown = (event: KeyboardEvent) => {
         if(event.key === 'MediaTrackPrevious') {
             goToPreviousMusic();
+            return;
         } 
-        else if(event.key === 'MediaTrackNext') {
+        
+        if(event.key === 'MediaTrackNext') {
             goToNextMusic();
         }
     }
@@ -182,7 +200,7 @@ function Player() {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         }
-    }, [queue, currentTime])
+    }, [queue, currentTime]);
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -221,5 +239,7 @@ function Player() {
         </div>
     );
 }
+
+export { setMusic }
 
 export default Player;
