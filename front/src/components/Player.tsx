@@ -88,10 +88,10 @@ function Player() {
         const audio = audioRef.current;
         const value = parseFloat(e.target.value) / 100;
         localStorage.setItem('MusicVolume', value.toString());
-        setCurrentVolume(parseFloat(e.target.value))
         if(audio){
             audio.volume = value;
         }
+        setCurrentVolume(parseFloat(e.target.value));
     }
 
     const goToNextMusic = () => {

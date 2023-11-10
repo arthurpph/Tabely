@@ -7,24 +7,14 @@ import '../assets/styles/MainBottom.css'
 
 function MainBottom() {
     const [musics, setMusics] = useState<MusicStructure[]>([]);
-    const [isReproductionIconHovered, setIsReproductionIconHovered] = useState<boolean>(false);
-    const [isMusicImageHovered, setIsMusicImageHovered] = useState<boolean>(false);
-    //let musicCounter: number = 0;
+    const [highlightedIndex, setHighlightedIndex] = useState<number>([]);
 
-    const reproductionIconMouseEnter = () => {
-        setIsReproductionIconHovered(true);
+    const reproductionIconMouseEnter = (index: number) => {
+        setHighlightedIndex(index);
     }
 
     const reproductionIconMouseLeave = () => {
-        setIsReproductionIconHovered(false);
-    }
-
-    const musicImageMouseEnter = () => {
-        setIsMusicImageHovered(true);
-    }
-
-    const musicImageMouseLeave = () => {
-        setIsMusicImageHovered(false);
+        setHighlightedIndex(-1);
     }
 
     const musicReproduction = (index: number) => {
@@ -58,28 +48,14 @@ function MainBottom() {
     return (
         <div style={{ fontFamily: 'Inter, sans-serif' }} className='mainbottom'>
             <div className='musicstab'>
-                {musics?.map((music, index) => {
-                    //musicCounter++
-                    //if(musicCounter === 4) {
-                        return (
-                            <div className='music' key={music.name + index}>
-                                <img src={music.imageURL} alt={`Music ${index}`} style={{ opacity: isReproductionIconHovered || isMusicImageHovered ? 0.2 : 1 }} className='musicimagemainbottom' onMouseEnter={musicImageMouseEnter} onMouseLeave={musicImageMouseLeave}/>
-                                <FontAwesomeIcon icon={faPlay} size="4x" style={{ position: 'relative', bottom: '6rem', opacity: isReproductionIconHovered || isMusicImageHovered ? 1 : 0, }} className='reproductionicon' onMouseEnter={reproductionIconMouseEnter} onMouseLeave={reproductionIconMouseLeave} onClick={() => musicReproduction(index)} key={index}/>
-                                <h3>{music.name}</h3>
-                                <p>{music.artist}</p>
-                            </div>
-                        );
-                        //musicCounter = 0;
-                    /*} else {
-                        return (
-                                <div className='music' key={music.name + index}>
-                                    <img src={music.imageURL} alt={`Music ${index}`}/>
-                                    <h3>{music.name}</h3>
-                                    <p>{music.artist}</p>
-                                </div>
-                        );
-                    }*/
-                })}
+                {musics?.map((music, index) => (
+                        <div className='music' key={music.name + index}>
+                            <img src={music.imageURL} alt={`Music ${index}`} style={{ opacity: highlightedIndex === index ? 0.2 : 1 }} className='musicimagemainbottom' onMouseEnter={() => reproductionIconMouseEnter(index)} onMouseLeave={() => reproductionIconMouseLeave()}/>
+                            <FontAwesomeIcon icon={faPlay} size="4x" style={{ position: 'relative', bottom: '6rem', opacity: highlightedIndex === index ? 1 : 0, }} className={`reproductionicon${index}`} onMouseEnter={() => reproductionIconMouseEnter(index)} onMouseLeave={() => reproductionIconMouseLeave()} onClick={() => musicReproduction(index)} key={index}/>
+                            <h3>{music.name}</h3>
+                            <p>{music.artist}</p>
+                        </div>
+                ))}
             </div>
         </div>
     );
