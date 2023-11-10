@@ -7,7 +7,7 @@ import '../assets/styles/MainBottom.css'
 
 function MainBottom() {
     const [musics, setMusics] = useState<MusicStructure[]>([]);
-    const [highlightedIndex, setHighlightedIndex] = useState<number>([]);
+    const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 
     const reproductionIconMouseEnter = (index: number) => {
         setHighlightedIndex(index);
