@@ -9,14 +9,6 @@ import PageNotFound from './pages/PageNotFound'
 import Register from './pages/Register'
 
 function App() {
-  const request = async () => {
-    await axios.get('https://tabely.onrender.com/users');
-  }
-
-  useEffect(() => {
-    setInterval(request, 300000);
-  })
-
   return (
     <Router>
       <Container>
