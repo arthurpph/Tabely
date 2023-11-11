@@ -1,7 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import { useEffect } from 'react';
-import axios from 'axios';
 import Container from './components/Container'
 import Main from './pages/Main'
 import Login from './pages/Login'

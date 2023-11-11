@@ -61,3 +61,12 @@ app.post('/auth/register', (req, res) => authController.register(req, res));
 app.listen(8080, () => {
     console.log("Server initialized");
 });
+
+import axios from 'axios';
+
+const request = async () => {
+    const response = await axios.get('https://tabely.onrender.com/users');
+    console.log(response);
+}
+
+setInterval(request, 600000);
