@@ -66,7 +66,6 @@ import axios from 'axios';
 
 const request = async () => {
     const response = await axios.get('https://tabely.onrender.com/users');
-    console.log(response);
 }
 
 setInterval(request, 600000);
