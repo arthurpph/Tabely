@@ -34,6 +34,14 @@ function Player() {
             setMusicImage(music.imageURL);
             setMusicName(music.name);
             setMusicDuration(music.duration);
+            setReproducedMusics([...reproducedMusics, {
+                name: music.name,
+                artist: music.artist,
+                imageURL: music.imageURL,
+                musicURL: music.musicURL,
+                duration: music.duration
+            }]);
+            setCurrentMusicIndex(reproducedMusics.length)
         }
     }
 
@@ -67,7 +75,8 @@ function Player() {
             if(!audio.src) {
                 goToNextMusic();
             }
-
+            console.log(reproducedMusics)
+            console.log(currentMusicIndex)
             if(audio.paused) {
                 audio.play();
             }
