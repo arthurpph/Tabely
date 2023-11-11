@@ -41,13 +41,15 @@ function Player() {
         const audio = audioRef.current;
         if(audio) {
             const musicIsDownloaded = downloadedMusics.filter(downloadedMusic => downloadedMusic.name === music.name);
+            let src;
             if(musicIsDownloaded.length > 0) {
-                audio.src = musicIsDownloaded[0].blobURL;
+                src = musicIsDownloaded[0].blobURL;
             } else {
                 downloadMusic(music.name, music.musicURL);
+                src = music.musicURL;
             }
 
-            audio.src = music.musicURL;
+            audio.src = src;
             setMusicImage(music.imageURL);
             setMusicName(music.name);
             setMusicDuration(music.duration);
@@ -92,7 +94,7 @@ function Player() {
             if(!audio.src) {
                 goToNextMusic();
             }
-            console.log(downloadedMusics)
+
             if(audio.paused) {
                 audio.play();
             }
