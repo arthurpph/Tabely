@@ -25,11 +25,28 @@ function Player() {
     const [musicDuration, setMusicDuration] = useState<string>('');
     const [musicImage, setMusicImage] = useState<string>('');
     const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(true);
+    const [downloadedMusics, setDownloadedMusics] = useState<{ name: string, blobURL: string }[]>([]);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    const downloadMusic = async (name: string, musicURL: string) => {
+        const music = await axios.get(musicURL, { responseType: 'blob' });
+        const blobURL = URL.createObjectURL(music.data);
+        setDownloadedMusics([...downloadedMusics, {
+            name: name,
+            blobURL: blobURL
+        }]);
+    }
 
     setMusic = (music: MusicStructure): void => {
         const audio = audioRef.current;
         if(audio) {
+            const musicIsDownloaded = downloadedMusics.filter(downloadedMusic => downloadedMusic.name === music.name);
+            if(musicIsDownloaded.length > 0) {
+                audio.src = musicIsDownloaded[0].blobURL;
+            } else {
+                downloadMusic(music.name, music.musicURL);
+            }
+
             audio.src = music.musicURL;
             setMusicImage(music.imageURL);
             setMusicName(music.name);
@@ -75,8 +92,7 @@ function Player() {
             if(!audio.src) {
                 goToNextMusic();
             }
-            console.log(reproducedMusics)
-            console.log(currentMusicIndex)
+            console.log(downloadedMusics)
             if(audio.paused) {
                 audio.play();
             }
