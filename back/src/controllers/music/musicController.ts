@@ -19,11 +19,6 @@ export class MusicController {
         const musicName = req.params.musicname;
         const musicPath = path.join(__dirname, '../../public/', musicName);
 
-        res.download(`${musicPath}.mp3`, (err) => {
-            if (err) {
-                console.error('Error downloading the file:', err);
-                res.status(500).send('Error downloading the file');
-            }
-        });
+        res.download(`${musicPath}.mp3`);
     }
 }
