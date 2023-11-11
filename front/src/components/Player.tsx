@@ -28,7 +28,7 @@ function Player() {
     const [downloadedMusics, setDownloadedMusics] = useState<{ name: string, blobURL: string }[]>([]);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    const downloadMusic = async (name: string, musicURL: string) => {
+    const downloadMusic = async (name: string, musicURL: string): Promise<void> => {
         const music = await axios.get(musicURL, { responseType: 'blob' });
         const blobURL = URL.createObjectURL(music.data);
         setDownloadedMusics([...downloadedMusics, {

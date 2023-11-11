@@ -53,6 +53,7 @@ app.post('/users', (req, res) => userController.addUser(req, res));
 
 app.get('/user', (req, res) => userController.getUserByEmail(req, res));
 
+app.get('/music/:musicname', (req, res) => musicController.getMusic(req, res));
 app.get('/musics', (req, res) => musicController.getMusics(req, res));
 
 app.post('/auth/login', (req, res) => authController.login(req, res));
