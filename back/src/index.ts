@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import morgan from 'morgan';
 import 'dotenv/config';
 import { MongoDatabase } from './drivers/mongoClient';
 import { UserRepository } from './repositories/user/userRepository';
@@ -31,6 +32,7 @@ const corsOptions = {
 
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use(morgan('dev'));
 
 const mongoDatabase: MongoDatabase = new MongoDatabase(process.env.DATABASE_URL);
 
