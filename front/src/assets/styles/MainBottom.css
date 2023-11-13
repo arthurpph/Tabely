@@ -2,17 +2,20 @@
 
 .mainbottom {
     color: white;
-    margin-left: 30rem;
+    margin-left: 23rem;
+    height: 100vh;
 }
 
 .musicstab {
-    display: flex;
-    gap: 8rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(400px, 1fr));
 }
 
 .music {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 }
 
