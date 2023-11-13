@@ -14,7 +14,7 @@ function Login() {
         password: ''
     }
 
-    const [state, setState] = useState(initialState);
+    const [state, setState] = useState<{ email: string, password: string }>(initialState);
     const [promiseInProgress, setPromiseInProgress] = useState<boolean>(false);
     const navigate = useNavigate();
 
