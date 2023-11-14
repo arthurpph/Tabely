@@ -39,4 +39,15 @@ export class UserController {
             res.status(500).json({ error: 'Error adding user', description: err});
         }
     }
+
+    async changeUserCurrentMusic(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+            const music = req.body.music;
+            await this.userService.changeUserCurrentMusic(id, music);
+            res.json(`Usuário atualizado com sucesso`);
+        } catch (err) {
+            res.status(500).json({ error: 'Error while updating user', description: err });
+        }
+    }
 }

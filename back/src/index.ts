@@ -25,6 +25,7 @@ const corsOptions = {
         if(!origin || allowedOrigins.indexOf(origin) !== -1) {
             cb(null, true);
         } else {
+            console.log(origin);
             cb(new Error('Unauthorized by CORS'), false);
         }
     }
@@ -53,6 +54,7 @@ app.post('/users', (req, res) => userController.addUser(req, res));
 
 app.get('/user', (req, res) => userController.getUserByEmail(req, res));
 
+app.put('/music/user/:id', (req, res) => userController.changeUserCurrentMusic(req, res));
 app.get('/music/:musicname', (req, res) => musicController.getMusic(req, res));
 app.get('/musics', (req, res) => musicController.getMusics(req, res));
 
