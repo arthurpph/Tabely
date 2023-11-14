@@ -252,7 +252,11 @@ function Player() {
                 if(firstMusicSetup) {
                     if(getCookie('loginToken')) {
                         const user = await getUser();
-                        changeMusic(user.currentMusic);
+                        if(user.currentMusic) {
+                            changeMusic(user.currentMusic);
+                        } else {
+                            goToNextMusic();
+                        }
                     } 
                     else {
                         goToNextMusic();

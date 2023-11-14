@@ -51,6 +51,9 @@ export class UserRepository implements UserInterface {
             const db = this.client.db();
             const usersCollection = db.collection('users');
             
+            delete user.currentMusic;
+            delete user.id;
+
             await usersCollection.insertOne(user);
         } catch (err) {
             throw err;
