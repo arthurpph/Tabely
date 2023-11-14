@@ -41,6 +41,7 @@ export class connectToIndexedDB {
                     if((e.target as any).result !== undefined) {
                         toast.error('Música já está baixada');
                     } else {
+                        toast.success('Baixando...');
                         const request = objectStore.add(audioData, key);
 
                         request.onsuccess = () => {
