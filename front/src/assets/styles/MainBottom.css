@@ -25,4 +25,14 @@
     border-radius: 30px;
 }
 
+.musicdownload {
+    border-radius: 10px;
+    width: 6rem;
+    height: 1.5rem;
+    background-color: green;
+    border: 0px solid;
+    font-family: 'Inter, sans-serif';
+    color: rgb(31, 30, 30);
+}
+
 

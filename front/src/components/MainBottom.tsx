@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { MusicStructure, setMusic } from './Player';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { audioDB } from '../App';
 import axios from 'axios';
 import '../assets/styles/MainBottom.css'
 
@@ -18,8 +19,16 @@ function MainBottom() {
     }
 
     const musicReproduction = (index: number) => {
-        const music = musics[index];
-        setMusic(music);
+        setMusic(musics[index]);
+    }
+
+    const downloadMusic = async (musicName: string, musicURL: string) => {
+        try {
+            const response = await axios.get(musicURL, { responseType: 'blob' });
+            await audioDB.addData(musicName, response.data);
+        } catch (err) {
+            console.log('Error: ' + err);
+        }
     }
 
     useEffect(() => {
@@ -54,6 +63,7 @@ function MainBottom() {
                         <FontAwesomeIcon icon={faPlay} size="4x" style={{ position: 'relative', bottom: '6rem', opacity: highlightedIndex === index ? 1 : 0, }} className={`reproductionicon${index}`} onMouseEnter={() => reproductionIconMouseEnter(index)} onMouseLeave={() => reproductionIconMouseLeave()} onClick={() => musicReproduction(index)} key={index}/>
                         <h3>{music.name}</h3>
                         <p>{music.artist}</p>
+                        <button className="musicdownload" onClick={() => downloadMusic(music.name, music.musicURL)}>Download</button>
                     </div>
                 ))}
             </div>

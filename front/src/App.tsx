@@ -5,6 +5,9 @@ import Main from './pages/Main'
 import Login from './pages/Login'
 import PageNotFound from './pages/PageNotFound'
 import Register from './pages/Register'
+import { connectToIndexedDB } from './services/indexedDB'
+
+export const audioDB = new connectToIndexedDB('AudioDatabase', 1);
 
 function App() {
   return (

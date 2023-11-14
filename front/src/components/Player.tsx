@@ -3,6 +3,7 @@ import axios from 'axios';
 import playButton from '../assets/images/PlayButton.png';
 import previousTrack from '../assets/images/Polygon 2-1.png';
 import nextTrack from '../assets/images/Polygon 2.png';
+import { audioDB } from '../App';
 import '../assets/styles/Player.css';
 
 export interface MusicStructure {
@@ -180,13 +181,18 @@ function Player() {
         }
     }
 
-    const changeAudioSrc = (musicName: string, musicURL: string) => {
+    const changeAudioSrc = async (musicName: string, musicURL: string) => {
         const audio = audioRef.current;
         if(audio) {
-            const musicIsDownloaded = downloadedMusics.filter(downloadedMusic => downloadedMusic.name === musicName);
-            if(musicIsDownloaded.length > 0) {
-                audio.src = musicIsDownloaded[0].blobURL;
-            } else {
+            const musicIsOnCache = downloadedMusics.filter(downloadedMusic => downloadedMusic.name === musicName);
+            const musicIsDownloaded = await audioDB.checkIfKeyExists(musicName);
+            if(musicIsDownloaded instanceof Blob) {
+                audio.src = URL.createObjectURL(musicIsDownloaded);
+            } 
+            else if(musicIsOnCache.length > 0) {
+                audio.src = musicIsOnCache[0].blobURL;
+            } 
+            else {
                 downloadMusic(musicName, musicURL);
                 audio.src = musicURL;
             }
