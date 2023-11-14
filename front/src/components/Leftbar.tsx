@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { decodeToken } from '../helpers/decodeToken';
+import { getCookie } from '../helpers/getCookie';
 import searchImg from '../assets/images/Search_alt.png'
 import musicImg from '../assets/images/Music_fill.png'
 import headphoneImg from '../assets/images/Headphones_fill.png'
@@ -12,10 +13,12 @@ function Leftbar() {
     const [jwtTokenName, setJwtTokenName] = useState('');
     
     useEffect(() => {
-        const decodedToken = decodeToken('', 'loginToken');
-
-        if(decodedToken) {
-            setJwtTokenName(decodedToken.name);
+        const token = getCookie('loginToken');
+        if(token) {
+            const decodedToken = decodeToken(token);
+            if(decodedToken) {
+                setJwtTokenName(decodedToken.name);
+            }
         }
     }, []);
 

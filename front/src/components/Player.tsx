@@ -8,6 +8,7 @@ import '../assets/styles/Player.css';
 import { decodeToken } from '../helpers/decodeToken';
 import { MusicStructure } from '../interfaces/musicStructure';
 import { UserInterface } from '../interfaces/userInterface';
+import { getCookie } from '../helpers/getCookie';
 
 let setMusic: (music: MusicStructure) => void;
 
@@ -166,7 +167,7 @@ function Player() {
         }
     }
 
-    const changeAudioSrc = async (musicName: string, musicURL: string) => {
+    const changeAudioSrc = async (musicName: string, musicURL: string): Promise<void> => {
         const audio = audioRef.current;
         if(audio) {
             const musicIsOnCache = downloadedMusics.filter(downloadedMusic => downloadedMusic.name === musicName);
@@ -185,9 +186,11 @@ function Player() {
     }
 
     const changeAccountCurrentMusic = async (music: MusicStructure): Promise<void> => {
-        await axios.put(`${import.meta.env.VITE_API_URL}/music/user/${decodeToken('', 'loginToken').id}`, {
-            music: music
-        });
+        if(getCookie('loginToken')) {
+            await axios.put(`${import.meta.env.VITE_API_URL}/music/user/${decodeToken('', 'loginToken').id}`, {
+                music: music
+            });
+        }
     }
 
     const changeMusic = (music: MusicStructure) => {
@@ -200,7 +203,7 @@ function Player() {
 
     useEffect(() => {
         const audio = audioRef.current;
-        if(audio){
+        if(audio) {
             audio.addEventListener('timeupdate', () => {
                 setCurrentTime(audio.currentTime);
             });
@@ -247,8 +250,13 @@ function Player() {
                 });
 
                 if(firstMusicSetup) {
-                    const user = await getUser();
-                    changeMusic(user.currentMusic);
+                    if(getCookie('loginToken')) {
+                        const user = await getUser();
+                        changeMusic(user.currentMusic);
+                    } 
+                    else {
+                        goToNextMusic();
+                    }
                     setFirstMusicSetup(false);
                 }
             } 
