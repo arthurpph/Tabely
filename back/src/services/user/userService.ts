@@ -1,9 +1,9 @@
 import { User } from "../../entities/user/user";
 import { MusicStructure } from "../../interfaces/music/musicStructure";
-import { UserInterface } from "../../interfaces/user/userInterface";
+import { UserRepository } from "../../repositories/user/userRepository";
 
 export class UserService {
-    constructor(readonly userRepository: UserInterface) {}
+    constructor(readonly userRepository: UserRepository) {}
 
     async getUsers(): Promise<User[]> {
         try {

@@ -35,7 +35,8 @@ export class UserRepository implements UserInterface {
                     id: user._id,
                     name: user.name,
                     email: user.email,
-                    password: user.password
+                    password: user.password,
+                    currentMusic: user.currentMusic
                 };
             }
 
