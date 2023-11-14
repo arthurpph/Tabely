@@ -40,16 +40,7 @@ function Player() {
     setMusic = (music: MusicStructure): void => {
         const audio = audioRef.current;
         if(audio) {
-            const musicIsDownloaded = downloadedMusics.filter(downloadedMusic => downloadedMusic.name === music.name);
-            let src;
-            if(musicIsDownloaded.length > 0) {
-                src = musicIsDownloaded[0].blobURL;
-            } else {
-                downloadMusic(music.name, music.musicURL);
-                src = music.musicURL;
-            }
-
-            audio.src = src;
+            changeAudioSrc(music.name, music.musicURL);
             setMusicImage(music.imageURL);
             setMusicName(music.name);
             setMusicDuration(music.duration);
@@ -123,7 +114,7 @@ function Player() {
 
     const goToNextMusic = () => {
         const audio = audioRef.current;
-        let nextMusic;
+        let nextMusic: MusicStructure | null = null;
 
         if(currentMusicIndex !== reproducedMusics.length - 1) {
             const currentMusicIndexScope: number = currentMusicIndex + 1;
@@ -142,7 +133,7 @@ function Player() {
         }
 
         if(audio && nextMusic) {
-            audio.src = nextMusic.musicURL;
+            changeAudioSrc(nextMusic.name, nextMusic.musicURL);
             setMusicImage(nextMusic.imageURL);
             setMusicName(nextMusic.name);
             setMusicDuration(nextMusic.duration);
@@ -169,7 +160,7 @@ function Player() {
             const previousMusic = reproducedMusics[currentMusicIndexScope];
 
             if(previousMusic) {
-                audio.src = previousMusic.musicURL;
+                changeAudioSrc(previousMusic.name, previousMusic.musicURL);
                 audio.currentTime = 0;
                 setMusicImage(previousMusic.imageURL);
                 setMusicName(previousMusic.name);
@@ -186,6 +177,19 @@ function Player() {
         
         if(event.key === 'MediaTrackNext') {
             goToNextMusic();
+        }
+    }
+
+    const changeAudioSrc = (musicName: string, musicURL: string) => {
+        const audio = audioRef.current;
+        if(audio) {
+            const musicIsDownloaded = downloadedMusics.filter(downloadedMusic => downloadedMusic.name === musicName);
+            if(musicIsDownloaded.length > 0) {
+                audio.src = musicIsDownloaded[0].blobURL;
+            } else {
+                downloadMusic(musicName, musicURL);
+                audio.src = musicURL;
+            }
         }
     }
 
