@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { MusicStructure, setMusic } from './Player';
+import { setMusic } from './Player';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { audioDB } from '../App';
+import { MusicStructure } from '../interfaces/musicStructure';
 import axios from 'axios';
 import '../assets/styles/MainBottom.css'
 

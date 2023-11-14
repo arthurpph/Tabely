@@ -5,14 +5,9 @@ import previousTrack from '../assets/images/Polygon 2-1.png';
 import nextTrack from '../assets/images/Polygon 2.png';
 import { audioDB } from '../App';
 import '../assets/styles/Player.css';
-
-export interface MusicStructure {
-    name: string,
-    artist: string,
-    imageURL: string,
-    musicURL: string,
-    duration: string
-}
+import { decodeToken } from '../helpers/decodeToken';
+import { MusicStructure } from '../interfaces/musicStructure';
+import { UserInterface } from '../interfaces/userInterface';
 
 let setMusic: (music: MusicStructure) => void;
 
@@ -41,10 +36,7 @@ function Player() {
     setMusic = (music: MusicStructure): void => {
         const audio = audioRef.current;
         if(audio) {
-            changeAudioSrc(music.name, music.musicURL);
-            setMusicImage(music.imageURL);
-            setMusicName(music.name);
-            setMusicDuration(music.duration);
+            changeMusic(music);
             setReproducedMusics([...reproducedMusics, {
                 name: music.name,
                 artist: music.artist,
@@ -52,7 +44,7 @@ function Player() {
                 musicURL: music.musicURL,
                 duration: music.duration
             }]);
-            setCurrentMusicIndex(reproducedMusics.length)
+            setCurrentMusicIndex(reproducedMusics.length);
         }
     }
 
@@ -121,7 +113,8 @@ function Player() {
             const currentMusicIndexScope: number = currentMusicIndex + 1;
             setCurrentMusicIndex(currentMusicIndexScope);
             nextMusic = reproducedMusics[currentMusicIndexScope];
-        } else if(queue.length > 0) {
+        } 
+        else if(queue.length > 0) {
             nextMusic = queue[0];
             setReproducedMusics([...reproducedMusics, {
                 name: nextMusic.name,
@@ -134,11 +127,7 @@ function Player() {
         }
 
         if(audio && nextMusic) {
-            changeAudioSrc(nextMusic.name, nextMusic.musicURL);
-            setMusicImage(nextMusic.imageURL);
-            setMusicName(nextMusic.name);
-            setMusicDuration(nextMusic.duration);
-            setCurrentTime(audio.currentTime);
+            changeMusic(nextMusic);
             setCurrentMusicIndex(currentMusicIndex + 1);
         }
     }
@@ -161,11 +150,7 @@ function Player() {
             const previousMusic = reproducedMusics[currentMusicIndexScope];
 
             if(previousMusic) {
-                changeAudioSrc(previousMusic.name, previousMusic.musicURL);
-                audio.currentTime = 0;
-                setMusicImage(previousMusic.imageURL);
-                setMusicName(previousMusic.name);
-                setMusicDuration(previousMusic.duration);
+                changeMusic(previousMusic)
             }
         }
     }
@@ -199,6 +184,20 @@ function Player() {
         }
     }
 
+    const changeAccountCurrentMusic = async (music: MusicStructure): Promise<void> => {
+        await axios.put(`${import.meta.env.VITE_API_URL}/music/user/${decodeToken('', 'loginToken').id}`, {
+            music: music
+        });
+    }
+
+    const changeMusic = (music: MusicStructure) => {
+        changeAccountCurrentMusic(music);
+        changeAudioSrc(music.name, music.musicURL);
+        setMusicName(music.name);
+        setMusicImage(music.imageURL);
+        setMusicDuration(music.duration);
+    }
+
     useEffect(() => {
         const audio = audioRef.current;
         if(audio){
@@ -229,21 +228,36 @@ function Player() {
         }
     }, []);
 
-    useEffect(() => {
-        const audio = audioRef.current;
-        if(audio && queue.length > 0){
-            audio.addEventListener('ended', () => {
-                goToNextMusic();
-            });
-
-            if(firstMusicSetup) {
-                goToNextMusic();
-                setFirstMusicSetup(false);
+    const getUser = async (): Promise<UserInterface> => {
+        const user = await axios.get(`${import.meta.env.VITE_API_URL}/user`, {
+            params: {
+                email: decodeToken('', 'loginToken').email
             }
-        } 
-        else if(queue.length === 0) {
-            buildQueue();
+        });
+
+        return user.data;
+    }
+
+    useEffect(() => {
+        const queueUseEffect = async () => {
+            const audio = audioRef.current;
+            if(audio && queue.length > 0){
+                audio.addEventListener('ended', () => {
+                    goToNextMusic();
+                });
+
+                if(firstMusicSetup) {
+                    const user = await getUser();
+                    changeMusic(user.currentMusic);
+                    setFirstMusicSetup(false);
+                }
+            } 
+            else if(queue.length === 0) {
+                buildQueue();
+            }
         }
+
+        queueUseEffect();
     }, [queue]);
 
     useEffect(() => {
