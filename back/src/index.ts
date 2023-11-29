@@ -68,7 +68,7 @@ app.listen(8080, () => {
 import axios from 'axios';
 
 const request = async () => {
-    const response = await axios.get('https://tabely.onrender.com/users');
+    const response = await axios.get('https://tabely-py16.onrender.com/users');
 }
 
 setInterval(request, 600000);
