@@ -3,12 +3,12 @@ import axios from 'axios';
 import playButton from '../assets/images/PlayButton.png';
 import previousTrack from '../assets/images/Polygon 2-1.png';
 import nextTrack from '../assets/images/Polygon 2.png';
-import { audioDB } from '../App';
-import '../assets/styles/Player.css';
 import { decodeToken } from '../helpers/decodeToken';
 import { MusicStructure } from '../interfaces/musicStructure';
 import { UserInterface } from '../interfaces/userInterface';
 import { getCookie } from '../helpers/getCookie';
+import { audioDB } from '../App';
+import '../assets/styles/Player.css';
 
 let setMusic: (music: MusicStructure) => void;
 
@@ -49,7 +49,7 @@ function Player() {
         }
     }
 
-    const buildQueue = async () => {
+    const buildQueue = async (): Promise<void> => {
         try {
             const musics = await axios.get(`${import.meta.env.VITE_API_URL}/musics`);
             const data = musics.data;
@@ -73,7 +73,7 @@ function Player() {
         }
     }
 
-    const handlePlayPause = () => {
+    const handlePlayPause = (): void => {
         const audio = audioRef.current
         if(audio){
             if(!audio.src) {
@@ -89,25 +89,24 @@ function Player() {
         }
     }
 
-    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const audio = audioRef.current;
         if(audio){
             audio.currentTime = parseFloat(e.target.value);
         }
     }
 
-    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const audio = audioRef.current;
         const value = parseFloat(e.target.value) / 100;
-        localStorage.setItem('MusicVolume', value.toString());
+        localStorage.setItem('player-volume', value.toString());
         if(audio){
             audio.volume = value;
         }
         setCurrentVolume(parseFloat(e.target.value));
     }
 
-    const goToNextMusic = () => {
-        const audio = audioRef.current;
+    const goToNextMusic = (): void => {
         let nextMusic: MusicStructure | null = null;
 
         if(currentMusicIndex !== reproducedMusics.length - 1) {
@@ -127,13 +126,13 @@ function Player() {
             setQueue(queue.length > 1 ? [...queue.slice(1)] : []);
         }
 
-        if(audio && nextMusic) {
+        if(nextMusic) {
             changeMusic(nextMusic);
             setCurrentMusicIndex(currentMusicIndex + 1);
         }
     }
 
-    const goToPreviousMusic = () => {
+    const goToPreviousMusic = (): void => {
         const audio = audioRef.current;
         if(audio) {
             if(currentTime >= 1) {
@@ -156,7 +155,7 @@ function Player() {
         }
     }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
         if(event.key === 'MediaTrackPrevious') {
             goToPreviousMusic();
             return;
@@ -186,19 +185,30 @@ function Player() {
     }
 
     const changeAccountCurrentMusic = async (music: MusicStructure): Promise<void> => {
-        if(getCookie('loginToken')) {
-            await axios.put(`${import.meta.env.VITE_API_URL}/music/user/${decodeToken('', 'loginToken').id}`, {
+        const token = getCookie('loginToken');
+        if(token) {
+            await axios.put(`${import.meta.env.VITE_API_URL}/music/user/${decodeToken(token).id}`, {
                 music: music
             });
         }
     }
 
-    const changeMusic = (music: MusicStructure) => {
+    const changeMusic = (music: MusicStructure): void => {
         changeAccountCurrentMusic(music);
         changeAudioSrc(music.name, music.musicURL);
         setMusicName(music.name);
         setMusicImage(music.imageURL);
         setMusicDuration(music.duration);
+    }
+
+    const getUser = async (): Promise<UserInterface> => {
+        const user = await axios.get(`${import.meta.env.VITE_API_URL}/user`, {
+            params: {
+                email: decodeToken('', 'loginToken').email
+            }
+        });
+
+        return user.data;
     }
 
     useEffect(() => {
@@ -218,7 +228,7 @@ function Player() {
 
             buildQueue();
 
-            const musicVolume = localStorage.getItem('MusicVolume');
+            const musicVolume = localStorage.getItem('player-volume');
 
             if(musicVolume) {
                 audio.volume = parseFloat(musicVolume);
@@ -231,18 +241,8 @@ function Player() {
         }
     }, []);
 
-    const getUser = async (): Promise<UserInterface> => {
-        const user = await axios.get(`${import.meta.env.VITE_API_URL}/user`, {
-            params: {
-                email: decodeToken('', 'loginToken').email
-            }
-        });
-
-        return user.data;
-    }
-
     useEffect(() => {
-        const queueUseEffect = async () => {
+        const queueUseEffect = async (): Promise<void> => {
             const audio = audioRef.current;
             if(audio && queue.length > 0){
                 audio.addEventListener('ended', () => {
@@ -254,7 +254,8 @@ function Player() {
                         const user = await getUser();
                         if(user.currentMusic) {
                             changeMusic(user.currentMusic);
-                        } else {
+                        } 
+                         else {
                             goToNextMusic();
                         }
                     } 
