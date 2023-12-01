@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { setMusic } from './Player';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
-import { audioDB } from '../App';
+//import { audioDB } from '../App';
 import { MusicStructure } from '../interfaces/musicStructure';
 import axios from 'axios';
 import '../assets/styles/MainComponent.css'
@@ -23,14 +23,14 @@ function MainBottom() {
         setMusic(musics[index]);
     }
 
-    const downloadMusic = async (musicName: string, musicURL: string) => {
+    /*const downloadMusic = async (musicName: string, musicURL: string) => {
         try {
             const response = await axios.get(musicURL, { responseType: 'blob' });
             await audioDB.addData(musicName, response.data);
         } catch (err) {
             console.log('Error: ' + err);
         }
-    }
+    }*/
 
     useEffect(() => {
         const loadMusics = async () => {
