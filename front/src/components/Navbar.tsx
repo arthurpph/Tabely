@@ -10,6 +10,7 @@ function Navbar() {
     const [activeTab, setActiveTab] = useState<string>('home');
     const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
     const [showLibrary, setShowLibrary] = useState<boolean>(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -19,17 +20,22 @@ function Navbar() {
         setActiveTab(tab);
     }, [location]);
 
-    const handleTabChange = (tab: string) => {
+    const handleTabChange = (tab: string): void => {
         setActiveTab(tab);
     }
 
-    const handleLogout = () => {
+    const handleLogout = (): void => {
         removeCookie('loginToken');
         window.location.href = '/login'
         setDropdownVisible(!dropdownVisible)
     }
 
-    const capitalizeFirstLetter = (name: string) => {
+    const handleLibraryClose = (): void => {
+        setShowLibrary(false);
+        handleTabChange('home');
+    }
+
+    const capitalizeFirstLetter = (name: string): string => {
         return name.charAt(0).toUpperCase() + name.substring(1);
     }
 
@@ -57,10 +63,10 @@ function Navbar() {
                     </div>
                 )}
             </div>
-            <LibraryOffCanvas showLibrary={showLibrary} handleClose={() => {
-                setShowLibrary(false);
-                handleTabChange('home');
-            }} />
+            <LibraryOffCanvas showLibrary={showLibrary} handleLibraryClose={handleLibraryClose} showModal={showModal} handleModalClose={() => {
+                setShowModal(false);
+                handleLibraryClose();
+            }} handleModalOpen={() => setShowModal(true)} />
         </header>
     );
 }

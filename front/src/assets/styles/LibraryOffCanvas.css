@@ -1,0 +1,15 @@
+.library-offcanvas {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.library-offcanvas button {
+    border-radius: 10px;
+    width: 10rem;
+    height: 3rem;
+    background-color: #091227;
+    color: #FFFFFF;
+}
+

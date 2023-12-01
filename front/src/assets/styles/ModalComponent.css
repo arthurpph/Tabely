@@ -1,0 +1,15 @@
+.modal-body input {
+    padding: 10px;
+    border: none;
+    margin-right: 10px;
+}
+
+.modal-footer span {
+    position: absolute;
+    left: 23px;
+}
+
+.modal-footer button {
+    background-color: var(--primary-color);
+    border: none;
+}

@@ -140,58 +140,6 @@
     cursor: pointer;
 }
 
-.offcanvas-header {
-    background-color: #808080;
-}
-
-.offcanvas-title.h5 {
-    width: 100%;
-    text-align: center;
-}
-
-.offcanvas-body {
-    background-color: #808080;
-}
-
-.offcanvas-body .queue-container {
-    position: relative;
-}
-
-.offcanvas-body div {
-    margin-bottom: 30px;
-    font-size: 13px;
-}
-
-.offcanvas-body div img {
-    width: 4rem;
-    height: 3rem;
-    border-radius: 5px;
-    margin: 15px;
-}
-
-.offcanvas-body div .musicdownload-container {
-    position: absolute;
-    right: 2.5rem;
-}
-
-.offcanvas-body div button {
-    background: transparent;
-    border-radius: 100px;
-    border: 2px solid #091227;
-    height: 3rem;
-    width: 3rem;
-    position: relative;
-    bottom: 3.8rem;
-}
-
-.offcanvas-body div button img {
-    width: 2rem;
-    height: 1.5rem;
-    position: relative;
-    right: 8px;
-    bottom: 4px;
-}
-
 .reproductioniconqueue {
     position: relative;
     top: 0.5rem;
