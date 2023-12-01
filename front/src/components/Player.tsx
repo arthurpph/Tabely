@@ -4,11 +4,16 @@ import { MusicStructure } from '../interfaces/musicStructure';
 import { UserInterface } from '../interfaces/userInterface';
 import { getCookie } from '../helpers/getCookie';
 import { audioDB } from '../App';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 import playButton from '../assets/images/PlayButton.svg';
-import pauseButton from '../assets/images/PauseButton.svg';
-import previousTrack from '../assets/images/PreviousTrack.svg';
-import nextTrack from '../assets/images/NextTrack.svg';
+import PauseButton from '../assets/images/PauseButton.svg';
+import PreviousTrack from '../assets/images/PreviousTrack.svg';
+import NextTrack from '../assets/images/NextTrack.svg';
+import DownloadIcon from '../assets/images/DownloadIcon.png'
+import Button from 'react-bootstrap/Button';
+import Offcanvas from 'react-bootstrap/Offcanvas';
 import '../assets/styles/Player.css';
 
 let setMusic: (music: MusicStructure) => void;
@@ -16,6 +21,7 @@ let setMusic: (music: MusicStructure) => void;
 function Player() {
     const [playButtonImage, setPlayImageButton] = useState<string>(playButton);
     const [isMusicImageLoadad, setIsMusicImageLoaded] = useState<boolean>(false);
+    const [showQueue, setShowQueue] = useState<boolean>(false);
     const [queue, setQueue] = useState<MusicStructure[]>([]);
     const [reproducedMusics, setReproducedMusics] = useState<MusicStructure[]>([]);
     const [currentMusicIndex, setCurrentMusicIndex] = useState<number>(-1);
@@ -26,6 +32,7 @@ function Player() {
     const [musicImage, setMusicImage] = useState<string>('');
     const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(true);
     const [downloadedMusics, setDownloadedMusics] = useState<{ name: string, blobURL: string }[]>([]);
+    const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const downloadMusic = async (name: string, musicURL: string): Promise<void> => {
@@ -35,6 +42,15 @@ function Player() {
             name: name,
             blobURL: blobURL
         }]);
+    }
+
+    const downloadMusicOnIndexedDB = async (musicName: string, musicURL: string) => {
+        try {
+            const response = await axios.get(musicURL, { responseType: 'blob' });
+            await audioDB.addData(musicName, response.data);
+        } catch (err) {
+            console.log('Error: ' + err);
+        }
     }
 
     setMusic = (music: MusicStructure): void => {
@@ -76,6 +92,12 @@ function Player() {
         }
     }
 
+    const changeQueue = (index: number) => {
+        setTimeout(() => {
+            setQueue(queue.slice(index));
+        }, 500);
+    }
+
     const handlePlayPause = (): void => {
         const audio = audioRef.current
         if(audio){
@@ -84,7 +106,7 @@ function Player() {
             }
 
             if(audio.paused) {
-                setPlayImageButton(pauseButton);
+                setPlayImageButton(PauseButton);
                 audio.play();
             }
             else {
@@ -207,7 +229,7 @@ function Player() {
         setMusicName(music.name);
         setMusicImage(music.imageURL);
         setMusicDuration(music.duration);
-        setPlayImageButton(pauseButton);
+        setPlayImageButton(PauseButton);
     }
 
     const getUser = async (): Promise<UserInterface> => {
@@ -223,6 +245,14 @@ function Player() {
     const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         setIsMusicImageLoaded(true);
         e.currentTarget?.classList.remove('unloaded');
+    }
+
+    const reproductionIconMouseEnter = (index: number) => {
+        setHighlightedIndex(index);
+    }
+
+    const reproductionIconMouseLeave = () => {
+        setHighlightedIndex(-1);
     }
 
     useEffect(() => {
@@ -302,9 +332,9 @@ function Player() {
             {isMusicImageLoadad ? <p className='musicname'>{musicName}</p> : <p className='musicnameloading'>Loading...</p>}
             <div className="playerinfo">
                 <div className='playercommands'>
-                    <button onClick={goToPreviousMusic}><img src={previousTrack} id='musiccontrollerbutton' alt="previousTrackButton"/></button>
+                    <button onClick={goToPreviousMusic}><img src={PreviousTrack} id='musiccontrollerbutton' alt="previousTrackButton"/></button>
                     <button onClick={handlePlayPause}><img src={playButtonImage} alt="playButton"/></button>
-                    <button onClick={goToNextMusic}><img src={nextTrack} id='musiccontrollerbutton' alt="nextTrackButton"/></button>
+                    <button onClick={goToNextMusic}><img src={NextTrack} id='musiccontrollerbutton' alt="nextTrackButton"/></button>
                 </div>
                 <audio ref={audioRef} preload="metadata">
                     <source type="audio/mpeg"/>
@@ -320,15 +350,66 @@ function Player() {
                         onChange={handleTimeChange}
                     />
                     <span>{musicDuration}</span>
-                    <svg data-encore-id="icon" aria-label="Volume alto" aria-hidden="true" id="volume-icon" viewBox="0 0 16 16" fill='white'><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 4.29V5.56a2.75 2.75 0 0 1 0 4.88z"></path><path d="M11.5 13.614a5.752 5.752 0 0 0 0-11.228v1.55a4.252 4.252 0 0 1 0 8.127v1.55z"></path></svg>
-                    <input
-                        id="musicvolumerange"
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={currentVolume}
-                        onChange={handleVolumeChange}
-                    />
+                    <div className='alternativecommands'>
+                        <div className='volumecommand'>
+                            <svg data-encore-id="icon" aria-label="Volume alto" aria-hidden="true" id="volume-icon" viewBox="0 0 16 16" fill='white'><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 4.29V5.56a2.75 2.75 0 0 1 0 4.88z"></path><path d="M11.5 13.614a5.752 5.752 0 0 0 0-11.228v1.55a4.252 4.252 0 0 1 0 8.127v1.55z"></path></svg>
+                            <input
+                                id="musicvolumerange"
+                                type="range"
+                                min="0"
+                                max="100"
+                                value={currentVolume}
+                                onChange={handleVolumeChange}
+                            />
+                        </div>
+                        <Button style={{ background: 'transparent', border: 'none' }} variant="primary" onClick={() => setShowQueue(true)}>
+                            <svg data-encore-id="icon" role="img" aria-hidden="true" viewBox="0 0 16 16" className="queue" fill="white"><path d="M15 15H1v-1.5h14V15zm0-4.5H1V9h14v1.5zm-14-7A2.5 2.5 0 0 1 3.5 1h9a2.5 2.5 0 0 1 0 5h-9A2.5 2.5 0 0 1 1 3.5zm2.5-1a1 1 0 0 0 0 2h9a1 1 0 1 0 0-2h-9z"></path></svg>
+                        </Button>
+                        <Offcanvas show={showQueue} onHide={() => setShowQueue(false)} placement="end" className="offcanvas">
+                            <Offcanvas.Header closeButton>
+                                <Offcanvas.Title>Queue</Offcanvas.Title>
+                            </Offcanvas.Header>
+                            <Offcanvas.Body>
+                                <div className="queue-container">
+                                    {queue.map((music, index) => (
+                                        <div key={index}>
+                                            {index + 1}
+                                            <img 
+                                                src={music.imageURL} 
+                                                alt={`Music Image ${index}`}
+                                                style={{ opacity: highlightedIndex === index ? 0.2 : 1, transition: 'opacity 0.4s ease' }} 
+                                                onMouseEnter={() => reproductionIconMouseEnter(index)} 
+                                                onMouseLeave={() => reproductionIconMouseLeave()}
+                                                onClick={() => {
+                                                    setMusic(music);
+                                                    changeQueue(index + 1);
+                                                }} 
+                                            />
+                                            <FontAwesomeIcon 
+                                                icon={faPlay} 
+                                                size="2x" 
+                                                style={{ position: 'relative', bottom: '5rem', opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease' }}
+                                                className={`reproductioniconqueue`}
+                                                onMouseEnter={() => reproductionIconMouseEnter(index)} 
+                                                onMouseLeave={() => reproductionIconMouseLeave()}
+                                                onClick={() => {
+                                                    setMusic(music);
+                                                    changeQueue(index + 1);
+                                                }}
+                                                key={index}
+                                            />
+                                            {music.name}
+                                            <div className="musicdownload-container">
+                                                <button className="musicdownload" onClick={() => downloadMusicOnIndexedDB(music.name, music.musicURL)}>
+                                                    <img src={DownloadIcon}/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </Offcanvas.Body>
+                        </Offcanvas>
+                    </div>
                 </div>
             </div>
         </div>

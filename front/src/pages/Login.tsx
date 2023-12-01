@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { TailSpin } from 'react-loader-spinner';
+import { getCookie } from "../helpers/getCookie";
 import axios from 'axios';
 import cookies from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,6 +10,8 @@ import '../assets/styles/CustomToast.css';
 import '../assets/styles/Login.css';
 
 function Login() {
+    const navigate = useNavigate();
+
     const initialState = {
         email: '',
         password: ''
@@ -54,6 +57,12 @@ function Login() {
             setPromiseInProgress(false);
         }
     }
+
+    useEffect(() => {
+        if(getCookie('loginToken')) {
+            return navigate('/');
+        }
+    }, [])
 
     return (
         <div className="logincontainer" style={{ fontFamily: 'Inter, sans-serif' }}>

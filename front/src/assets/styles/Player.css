@@ -14,19 +14,18 @@
 
 .playerinfo {
     display: flex;
-    margin-right: 20rem;
+    margin-right: 15rem;
 }
 
 .playerinfo audio {
-    width: 35rem;
+    width: 10rem;
 }
 
 .playerinfo #musictimerange {
     -webkit-appearance: none;
     appearance: none;
-    width: 30rem;
+    width: 29rem;
     height: 0.5rem;
-    margin-top: 1.5rem;
     border-radius: 5px;
     outline: none;
     opacity: 0.4;
@@ -48,7 +47,7 @@
 }
 
 .playercommands {
-    margin-right: 20rem;
+    margin-right: 15rem;
 }
 
 .playercommands button {
@@ -66,7 +65,6 @@
 #musiccontrollerbutton {
     width: 1rem;
     height: 1rem;
-    margin-bottom: 0.7rem;
 }
 
 .musicphoto {
@@ -77,12 +75,27 @@
 }
 
 .musicname {
-    margin-right: 7rem;
+    margin-right: 4rem;
+    margin-top: 17px;
     font-size: 0.95rem;
 }
 
 .musicnameloading {
     margin-left: 13rem;
+}
+
+.musicinteraction {
+    display: flex;
+    align-items: center;
+}
+
+.alternativecommands {
+    display: flex;
+    align-items: center;
+}
+
+.volumecommand {
+    margin-left: 7rem;
 }
 
 #tracktime {
@@ -91,14 +104,15 @@
 }
 
 #volume-icon {
-    position: relative;
-    left: 12rem;
-    top: 0.6rem;
     width: 2rem;
 }
 
 #volume-icon:hover + #musicvolumerange {
     opacity: 0.4;
+}
+
+#musictimerange {
+    margin: 5px;
 }
 
 #musicvolumerange:hover {
@@ -108,8 +122,8 @@
 #musicvolumerange {
     opacity: 0;
     position: relative;
-    bottom: 4rem;
-    left: 8.5rem;
+    bottom: 5rem;
+    right: 3.5rem;
     width: 5rem;
     height: 1rem;
     -webkit-appearance: none;
@@ -119,6 +133,69 @@
     -webkit-transition: .2s;
     transition: opacity .2s;
     transform: rotate(270deg); 
+}
+
+.queue {
+    width: 2rem;
+    cursor: pointer;
+}
+
+.offcanvas-header {
+    background-color: #808080;
+}
+
+.offcanvas-title.h5 {
+    width: 100%;
+    text-align: center;
+}
+
+.offcanvas-body {
+    background-color: #808080;
+}
+
+.offcanvas-body .queue-container {
+    position: relative;
+}
+
+.offcanvas-body div {
+    margin-bottom: 30px;
+    font-size: 13px;
+}
+
+.offcanvas-body div img {
+    width: 4rem;
+    height: 3rem;
+    border-radius: 5px;
+    margin: 15px;
+}
+
+.offcanvas-body div .musicdownload-container {
+    position: absolute;
+    right: 2.5rem;
+}
+
+.offcanvas-body div button {
+    background: transparent;
+    border-radius: 100px;
+    border: 2px solid #091227;
+    height: 3rem;
+    width: 3rem;
+    position: relative;
+    bottom: 3.8rem;
+}
+
+.offcanvas-body div button img {
+    width: 2rem;
+    height: 1.5rem;
+    position: relative;
+    right: 8px;
+    bottom: 4px;
+}
+
+.reproductioniconqueue {
+    position: relative;
+    top: 0.5rem;
+    right: 3.4rem;
 }
 
 .unloaded {
