@@ -5,7 +5,7 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { audioDB } from '../App';
 import { MusicStructure } from '../interfaces/musicStructure';
 import axios from 'axios';
-import '../assets/styles/MainBottom.css'
+import '../assets/styles/MainComponent.css'
 
 function MainBottom() {
     const [musics, setMusics] = useState<MusicStructure[]>([]);
@@ -58,15 +58,35 @@ function MainBottom() {
     return (
         <div style={{ fontFamily: 'Inter, sans-serif' }} className='mainbottom'>
             <div className='musicstab'>
-                {musics?.map((music, index) => (
-                    <div className='music' key={music.name + index}>
-                        <img src={music.imageURL} alt={`Music ${music.name}`} style={{ opacity: highlightedIndex === index ? 0.2 : 1, transition: 'opacity 0.4s ease' }} className='music_image_main_bottom' onMouseEnter={() => reproductionIconMouseEnter(index)} onMouseLeave={() => reproductionIconMouseLeave()}/>
-                        <FontAwesomeIcon icon={faPlay} size="4x" style={{ position: 'relative', bottom: '6rem', opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease' }} className={`reproductionicon${index}`} onMouseEnter={() => reproductionIconMouseEnter(index)} onMouseLeave={() => reproductionIconMouseLeave()} onClick={() => musicReproduction(index)} key={index}/>
-                        <h3>{music.name}</h3>
-                        <p>{music.artist}</p>
-                        <button className="musicdownload" onClick={() => downloadMusic(music.name, music.musicURL)}>Download</button>
-                    </div>
-                ))}
+                <p>Songs available</p>
+                <div className='musicsdisplay'>
+                    {musics?.map((music, index) => (
+                        <div className='music' key={music.name + index}>
+                            <img 
+                                src={music.imageURL} 
+                                alt={`Music ${music.name}`} 
+                                style={{ opacity: highlightedIndex === index ? 0.2 : 1, transition: 'opacity 0.4s ease' }} 
+                                className='music_image_main_bottom' 
+                                onMouseEnter={() => reproductionIconMouseEnter(index)} 
+                                onMouseLeave={() => reproductionIconMouseLeave()}
+                                onClick={() => musicReproduction(index)} 
+                            />
+                            <FontAwesomeIcon 
+                                icon={faPlay} 
+                                size="2x" 
+                                style={{ position: 'relative', bottom: '5rem', opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease' }} 
+                                className={`reproductionicon${index}`} 
+                                onMouseEnter={() => reproductionIconMouseEnter(index)} 
+                                onMouseLeave={() => reproductionIconMouseLeave()}
+                                onClick={() => musicReproduction(index)} 
+                                key={index}
+                            />
+                            <h3>{music.name}</h3>
+                            <p>{music.artist}</p>
+                            {/* <button className="musicdownload" onClick={() => downloadMusic(music.name, music.musicURL)}>Download</button>*/}
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

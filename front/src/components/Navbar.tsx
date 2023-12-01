@@ -23,7 +23,7 @@ function Navbar() {
 
     const handleLogout = () => {
         removeCookie('loginToken');
-        navigate('/login');
+        window.location.href = '/login'
         setDropdownVisible(!dropdownVisible)
     }
 
@@ -47,11 +47,11 @@ function Navbar() {
                     </li>
                 </ul>
             </nav>
-            <div>
-                {!getCookie('loginToken') ? <button className="login-button" onClick={() => navigate('/login')}>Login</button> : <p onClick={() => setDropdownVisible(!dropdownVisible)}>Logged as {capitalizeFirstLetter(decodeToken('', 'loginToken').name)}</p>}
+            <div className="login-info" onMouseLeave={() => setDropdownVisible(false)}>
+                {!getCookie('loginToken') ? <button className="login-button" onClick={() => navigate('/login')}>Login</button> : <p style={{ cursor: 'pointer', textDecoration: 'underline' }} onMouseEnter={() => setDropdownVisible(true)}>Logged as {capitalizeFirstLetter(decodeToken('', 'loginToken').name)}</p>}
                 {dropdownVisible && (
-                    <div className="dropdown-content" onMouseLeave={() => setDropdownVisible(false)}>
-                        <button onClick={handleLogout}>Log out</button>
+                    <div className="dropdown-content">
+                        <button className="dropdown-content-button" onClick={handleLogout}>Log out</button>
                     </div>
                 )}
             </div>

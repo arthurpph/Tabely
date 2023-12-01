@@ -47,4 +47,5 @@ header div .dropdown-content button {
     width: 100%;
     border-radius: 5px;
     background-color: #FF6584;
+    cursor: pointer;
 }
