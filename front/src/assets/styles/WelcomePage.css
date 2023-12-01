@@ -1,0 +1,36 @@
+main .main-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+main .main-section div h1 {
+    margin-bottom: 20px;
+}
+
+main .main-section div h4 {
+    margin-bottom: 60px;
+}
+
+main .main-section div h1 {
+    font-size: 48px;
+    font-weight: 600;
+}
+
+main .main-section div h4 {
+    font-size: 18px;
+    font-weight: 100;
+    opacity: 0.8;
+}
+
+main .main-section div button {
+    width: 15rem;
+    height: 3rem;
+    background-color: #FF6584;
+    border-radius: 15px;
+    font-weight: 600;
+    color: #FFFFFF;
+    font-size: 16px;
+    cursor: pointer;
+}

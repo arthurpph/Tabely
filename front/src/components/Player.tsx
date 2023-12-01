@@ -1,18 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import playButton from '../assets/images/PlayButton.png';
-import previousTrack from '../assets/images/Polygon 2-1.png';
-import nextTrack from '../assets/images/Polygon 2.png';
 import { decodeToken } from '../helpers/decodeToken';
 import { MusicStructure } from '../interfaces/musicStructure';
 import { UserInterface } from '../interfaces/userInterface';
 import { getCookie } from '../helpers/getCookie';
 import { audioDB } from '../App';
+import axios from 'axios';
+import playButton from '../assets/images/PlayButton.svg';
+import pauseButton from '../assets/images/PauseButton.svg';
+import previousTrack from '../assets/images/PreviousTrack.svg';
+import nextTrack from '../assets/images/NextTrack.svg';
 import '../assets/styles/Player.css';
 
 let setMusic: (music: MusicStructure) => void;
 
 function Player() {
+    const [playButtonImage, setPlayImageButton] = useState<string>(playButton);
+    const [isMusicImageLoadad, setIsMusicImageLoaded] = useState<boolean>(false);
     const [queue, setQueue] = useState<MusicStructure[]>([]);
     const [reproducedMusics, setReproducedMusics] = useState<MusicStructure[]>([]);
     const [currentMusicIndex, setCurrentMusicIndex] = useState<number>(-1);
@@ -81,9 +84,11 @@ function Player() {
             }
 
             if(audio.paused) {
+                setPlayImageButton(pauseButton);
                 audio.play();
             }
             else {
+                setPlayImageButton(playButton);
                 audio.pause();
             }
         }
@@ -129,6 +134,9 @@ function Player() {
         if(nextMusic) {
             changeMusic(nextMusic);
             setCurrentMusicIndex(currentMusicIndex + 1);
+            if(firstMusicSetup) {
+                setPlayImageButton(playButton);
+            }
         }
     }
 
@@ -199,6 +207,7 @@ function Player() {
         setMusicName(music.name);
         setMusicImage(music.imageURL);
         setMusicDuration(music.duration);
+        setPlayImageButton(pauseButton);
     }
 
     const getUser = async (): Promise<UserInterface> => {
@@ -209,6 +218,11 @@ function Player() {
         });
 
         return user.data;
+    }
+    
+    const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        setIsMusicImageLoaded(true);
+        e.currentTarget?.classList.remove('unloaded');
     }
 
     useEffect(() => {
@@ -254,8 +268,9 @@ function Player() {
                         const user = await getUser();
                         if(user.currentMusic) {
                             changeMusic(user.currentMusic);
+                            setPlayImageButton(playButton);
                         } 
-                         else {
+                        else {
                             goToNextMusic();
                         }
                     } 
@@ -283,12 +298,12 @@ function Player() {
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>
-            <img src={musicImage} alt="musicImage" className="musicphoto"/>
-            <p className='musicname'>{musicName}</p>
+            <img src={musicImage} alt="musicImage" className="musicphoto unloaded" onLoad={handleImageLoad}/>
+            {isMusicImageLoadad ? <p className='musicname'>{musicName}</p> : <p className='musicnameloading'>Loading...</p>}
             <div className="playerinfo">
                 <div className='playercommands'>
                     <button onClick={goToPreviousMusic}><img src={previousTrack} id='musiccontrollerbutton' alt="previousTrackButton"/></button>
-                    <button onClick={handlePlayPause}><img src={playButton} alt="playButton"/></button>
+                    <button onClick={handlePlayPause}><img src={playButtonImage} alt="playButton"/></button>
                     <button onClick={goToNextMusic}><img src={nextTrack} id='musiccontrollerbutton' alt="nextTrackButton"/></button>
                 </div>
                 <audio ref={audioRef} preload="metadata">
@@ -305,7 +320,7 @@ function Player() {
                         onChange={handleTimeChange}
                     />
                     <span>{musicDuration}</span>
-                    <svg data-encore-id="icon" aria-label="Volume alto" aria-hidden="true" id="volume-icon" viewBox="0 0 16 16"><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 4.29V5.56a2.75 2.75 0 0 1 0 4.88z"></path><path d="M11.5 13.614a5.752 5.752 0 0 0 0-11.228v1.55a4.252 4.252 0 0 1 0 8.127v1.55z"></path></svg>
+                    <svg data-encore-id="icon" aria-label="Volume alto" aria-hidden="true" id="volume-icon" viewBox="0 0 16 16" fill='white'><path d="M9.741.85a.75.75 0 0 1 .375.65v13a.75.75 0 0 1-1.125.65l-6.925-4a3.642 3.642 0 0 1-1.33-4.967 3.639 3.639 0 0 1 1.33-1.332l6.925-4a.75.75 0 0 1 .75 0zm-6.924 5.3a2.139 2.139 0 0 0 0 3.7l5.8 3.35V2.8l-5.8 3.35zm8.683 4.29V5.56a2.75 2.75 0 0 1 0 4.88z"></path><path d="M11.5 13.614a5.752 5.752 0 0 0 0-11.228v1.55a4.252 4.252 0 0 1 0 8.127v1.55z"></path></svg>
                     <input
                         id="musicvolumerange"
                         type="range"

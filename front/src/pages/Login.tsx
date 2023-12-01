@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { TailSpin } from 'react-loader-spinner';
 import axios from 'axios';
@@ -16,7 +16,6 @@ function Login() {
 
     const [state, setState] = useState<{ email: string, password: string }>(initialState);
     const [promiseInProgress, setPromiseInProgress] = useState<boolean>(false);
-    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -47,7 +46,7 @@ function Login() {
             cookies.set('loginToken', data.accessToken);
             
             toast.success(data.response);
-            navigate('/');
+            window.location.href = '/';
         } catch (err) {
             toast.error('An error has occurred, see console for more details');
             console.error(err);

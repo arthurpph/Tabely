@@ -1,3 +1,11 @@
+* {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    background-color: rgba(27, 26, 26, 1);
+    background-color: #091227;
+    font-family: 'Poppins', sans-serif;
 }

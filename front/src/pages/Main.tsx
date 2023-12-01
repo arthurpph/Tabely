@@ -1,16 +1,14 @@
-import Leftbar from "../components/Leftbar";
 import MainBottom from "../components/MainBottom";
-import MainTop from "../components/MainTop";
+import Navbar from "../components/Navbar";
 import Player from "../components/Player";
 
 function Main() {
     return (
         <div>
-            <MainTop/>
+            <Navbar/>
             <MainBottom/>
-            <Leftbar/>
             <Player/>
-        </div>  
+        </div>
     );
 }
 

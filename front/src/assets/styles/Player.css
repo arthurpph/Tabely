@@ -3,7 +3,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #333;
+    background-color: rgba(5, 5, 5, 0.6);
     color: white;
     padding: 10px;
     box-shadow: 0px -3px 10px rgba(0, 0, 0, 0.5); /* Sombra sob o player */
@@ -81,6 +81,10 @@
     font-size: 0.95rem;
 }
 
+.musicnameloading {
+    margin-left: 13rem;
+}
+
 #tracktime {
     height: 2rem;
     margin-top: 0.8rem;
@@ -115,4 +119,8 @@
     -webkit-transition: .2s;
     transition: opacity .2s;
     transform: rotate(270deg); 
+}
+
+.unloaded {
+    display: none;
 }
