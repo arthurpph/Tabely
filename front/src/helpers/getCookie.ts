@@ -1,5 +1,5 @@
 import cookies from 'js-cookie';
 
-export function getCookie(tokenName: string): string | undefined {
-    return cookies.get(tokenName);
+export function getCookie(cookieName: string): string | undefined {
+    return cookies.get(cookieName);
 }
