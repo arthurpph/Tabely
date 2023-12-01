@@ -28,6 +28,12 @@ header nav ul li a {
     opacity: 0.6;
 }
 
+header nav ul li button {
+    background: transparent;
+    color: #FFFFFF;
+    opacity: 0.6;
+}
+
 header .login-button {
     width: 10rem;
     height: 2.5rem;

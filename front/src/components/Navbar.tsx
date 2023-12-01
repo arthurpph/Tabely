@@ -4,10 +4,12 @@ import { getCookie } from '../helpers/getCookie';
 import { decodeToken } from '../helpers/decodeToken';
 import { removeCookie } from '../helpers/removeCookie';
 import '../assets/styles/Navbar.css';
+import LibraryOffCanvas from './LibraryOffCanvas';
 
 function Navbar() {
     const [activeTab, setActiveTab] = useState<string>('home');
     const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+    const [showLibrary, setShowLibrary] = useState<boolean>(false);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -43,7 +45,7 @@ function Navbar() {
                         {getCookie('loginToken') ? <Link to="/">Browse</Link> : <Link to="/login">Browse</Link>}
                     </li>
                     <li className={activeTab === 'library' ? 'active' : ''} onClick={() => handleTabChange('library')}>
-                        {getCookie('loginToken') ? <Link to="/library">Library</Link> : <Link to="/login">Library</Link>}
+                        {getCookie('loginToken') ? <button onClick={() => setShowLibrary(true)}>Library</button> : <Link to="/login">Library</Link>}
                     </li>
                 </ul>
             </nav>
@@ -55,6 +57,10 @@ function Navbar() {
                     </div>
                 )}
             </div>
+            <LibraryOffCanvas showLibrary={showLibrary} handleClose={() => {
+                setShowLibrary(false);
+                handleTabChange('home');
+            }} />
         </header>
     );
 }

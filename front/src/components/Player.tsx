@@ -4,16 +4,13 @@ import { MusicStructure } from '../interfaces/musicStructure';
 import { UserInterface } from '../interfaces/userInterface';
 import { getCookie } from '../helpers/getCookie';
 import { audioDB } from '../App';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import QueueOffCanvas from './QueueOffCanvas';
 import playButton from '../assets/images/PlayButton.svg';
 import PauseButton from '../assets/images/PauseButton.svg';
 import PreviousTrack from '../assets/images/PreviousTrack.svg';
 import NextTrack from '../assets/images/NextTrack.svg';
-import DownloadIcon from '../assets/images/DownloadIcon.png'
 import Button from 'react-bootstrap/Button';
-import Offcanvas from 'react-bootstrap/Offcanvas';
 import '../assets/styles/Player.css';
 
 let setMusic: (music: MusicStructure) => void;
@@ -32,7 +29,6 @@ function Player() {
     const [musicImage, setMusicImage] = useState<string>('');
     const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(true);
     const [downloadedMusics, setDownloadedMusics] = useState<{ name: string, blobURL: string }[]>([]);
-    const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const downloadMusic = async (name: string, musicURL: string): Promise<void> => {
@@ -42,15 +38,6 @@ function Player() {
             name: name,
             blobURL: blobURL
         }]);
-    }
-
-    const downloadMusicOnIndexedDB = async (musicName: string, musicURL: string) => {
-        try {
-            const response = await axios.get(musicURL, { responseType: 'blob' });
-            await audioDB.addData(musicName, response.data);
-        } catch (err) {
-            console.log('Error: ' + err);
-        }
     }
 
     setMusic = (music: MusicStructure): void => {
@@ -92,7 +79,7 @@ function Player() {
         }
     }
 
-    const changeQueue = (index: number) => {
+    const changeQueue = (index: number): void => {
         setTimeout(() => {
             setQueue(queue.slice(index));
         }, 500);
@@ -247,14 +234,6 @@ function Player() {
         e.currentTarget?.classList.remove('unloaded');
     }
 
-    const reproductionIconMouseEnter = (index: number) => {
-        setHighlightedIndex(index);
-    }
-
-    const reproductionIconMouseLeave = () => {
-        setHighlightedIndex(-1);
-    }
-
     useEffect(() => {
         const audio = audioRef.current;
         if(audio) {
@@ -365,50 +344,13 @@ function Player() {
                         <Button style={{ background: 'transparent', border: 'none' }} variant="primary" onClick={() => setShowQueue(true)}>
                             <svg data-encore-id="icon" role="img" aria-hidden="true" viewBox="0 0 16 16" className="queue" fill="white"><path d="M15 15H1v-1.5h14V15zm0-4.5H1V9h14v1.5zm-14-7A2.5 2.5 0 0 1 3.5 1h9a2.5 2.5 0 0 1 0 5h-9A2.5 2.5 0 0 1 1 3.5zm2.5-1a1 1 0 0 0 0 2h9a1 1 0 1 0 0-2h-9z"></path></svg>
                         </Button>
-                        <Offcanvas show={showQueue} onHide={() => setShowQueue(false)} placement="end" className="offcanvas">
-                            <Offcanvas.Header closeButton>
-                                <Offcanvas.Title>Queue</Offcanvas.Title>
-                            </Offcanvas.Header>
-                            <Offcanvas.Body>
-                                <div className="queue-container">
-                                    {queue.map((music, index) => (
-                                        <div key={index}>
-                                            {index + 1}
-                                            <img 
-                                                src={music.imageURL} 
-                                                alt={`Music Image ${index}`}
-                                                style={{ opacity: highlightedIndex === index ? 0.2 : 1, transition: 'opacity 0.4s ease' }} 
-                                                onMouseEnter={() => reproductionIconMouseEnter(index)} 
-                                                onMouseLeave={() => reproductionIconMouseLeave()}
-                                                onClick={() => {
-                                                    setMusic(music);
-                                                    changeQueue(index + 1);
-                                                }} 
-                                            />
-                                            <FontAwesomeIcon 
-                                                icon={faPlay} 
-                                                size="2x" 
-                                                style={{ position: 'relative', bottom: '5rem', opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease' }}
-                                                className={`reproductioniconqueue`}
-                                                onMouseEnter={() => reproductionIconMouseEnter(index)} 
-                                                onMouseLeave={() => reproductionIconMouseLeave()}
-                                                onClick={() => {
-                                                    setMusic(music);
-                                                    changeQueue(index + 1);
-                                                }}
-                                                key={index}
-                                            />
-                                            {music.name}
-                                            <div className="musicdownload-container">
-                                                <button className="musicdownload" onClick={() => downloadMusicOnIndexedDB(music.name, music.musicURL)}>
-                                                    <img src={DownloadIcon}/>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </Offcanvas.Body>
-                        </Offcanvas>
+                        <QueueOffCanvas 
+                            showQueue={showQueue}
+                            handleClose={() => setShowQueue(false)}
+                            queue={queue}
+                            setMusic={setMusic}
+                            changeQueue={changeQueue}
+                        />
                     </div>
                 </div>
             </div>
