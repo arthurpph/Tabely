@@ -50,4 +50,14 @@ export class UserController {
             res.status(500).json({ error: 'Error while updating user', description: err });
         }
     }
+
+    async addUserPlaylist(req: Request, res: Response) {
+        try {
+            const { userId, playlistId } = req.body;
+            await this.userService.addUserPlaylist(userId, playlistId);
+            res.json(`Playlist ${playlistId} adicionada ao usuário ${userId}`);
+        } catch (err) {
+            res.status(500).json({ error: 'Error while adding playlist to a user', description: err});
+        }
+    }
 }

@@ -36,7 +36,8 @@ export class UserRepository implements UserInterface {
                     name: user.name,
                     email: user.email,
                     password: user.password,
-                    currentMusic: user.currentMusic
+                    currentMusic: user.currentMusic,
+                    playlists: user.playlists
                 };
             }
 
@@ -75,6 +76,24 @@ export class UserRepository implements UserInterface {
             { 
                 $set: {
                     currentMusic: music
+                }
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async addUserPlaylist(userId: number, playlistId: ObjectId): Promise<void> {
+        try {
+            const db = this.client.db();
+            const usersCollection = db.collection('users');
+
+            await usersCollection.updateOne({
+                _id: new ObjectId(userId)
+            },
+            {
+                $push: {
+                    playlists: playlistId
                 }
             });
         } catch (err) {

@@ -13,3 +13,9 @@
     color: #FFFFFF;
 }
 
+.library-offcanvas .create-a-playlist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+

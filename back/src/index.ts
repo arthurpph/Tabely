@@ -12,6 +12,9 @@ import { AuthController } from './controllers/auth/authController';
 import { MusicRepository } from './repositories/music/musicRepository';
 import { MusicService } from './services/music/musicService';
 import { MusicController } from './controllers/music/musicController';
+import { PlaylistRepository } from './repositories/playlist/playlistRepository';
+import { PlaylistService } from './services/playlist/playlistService';
+import { PlaylistController } from './controllers/playlist/playlistController';
 
 const app: express.Application = express();
 
@@ -29,6 +32,7 @@ const corsOptions = {
             cb(new Error('Unauthorized by CORS'), false);
         }
     }
+
 }
 
 app.use(express.json());
@@ -38,7 +42,7 @@ app.use(morgan('dev'));
 const mongoDatabase: MongoDatabase = new MongoDatabase(process.env.DATABASE_URL);
 
 const userRepository: UserRepository = new UserRepository(mongoDatabase.getClient());
-const userService: UserService = new UserService(userRepository);
+export const userService: UserService = new UserService(userRepository);
 const userController: UserController = new UserController(userService);
 
 const authRepository: AuthRepository = new AuthRepository(mongoDatabase.getClient());
@@ -49,10 +53,15 @@ const musicRepository: MusicRepository = new MusicRepository(mongoDatabase.getCl
 const musicService: MusicService = new MusicService(musicRepository);
 const musicController: MusicController = new MusicController(musicService);
 
+const playlistRepository: PlaylistRepository = new PlaylistRepository(mongoDatabase.getClient());
+const playlistService: PlaylistService = new PlaylistService(playlistRepository);
+const playlistController: PlaylistController = new PlaylistController(playlistService);
+
 app.get('/users', (req, res) => userController.getAllUsers(req, res));
 app.post('/users', (req, res) => userController.addUser(req, res));
 
 app.get('/user', (req, res) => userController.getUserByEmail(req, res));
+app.put('/user/playlist', (req, res) => userController.addUserPlaylist(req, res));
 
 app.put('/music/user/:id', (req, res) => userController.changeUserCurrentMusic(req, res));
 app.get('/music/:musicname', (req, res) => musicController.getMusic(req, res));
@@ -60,6 +69,9 @@ app.get('/musics', (req, res) => musicController.getMusics(req, res));
 
 app.post('/auth/login', (req, res) => authController.login(req, res));
 app.post('/auth/register', (req, res) => authController.register(req, res));
+
+app.get('/playlists', (req, res) => playlistController.getUserPlaylist(req, res));
+app.post('/playlist', (req, res) => playlistController.createPlaylist(req, res));
 
 app.listen(8080, () => {
     console.log("Server initialized");

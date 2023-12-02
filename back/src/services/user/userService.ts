@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { User } from "../../entities/user/user";
 import { MusicStructure } from "../../interfaces/music/musicStructure";
 import { UserRepository } from "../../repositories/user/userRepository";
@@ -36,6 +37,14 @@ export class UserService {
     async changeUserCurrentMusic(userId: string, music: MusicStructure): Promise<void> {
         try {
             await this.userRepository.changeUserCurrentMusic(userId, music);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async addUserPlaylist(userId: number, playlistId: ObjectId) {
+        try {
+            await this.userRepository.addUserPlaylist(userId, playlistId);
         } catch (err) {
             throw err;
         }

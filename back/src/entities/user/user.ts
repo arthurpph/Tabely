@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { MusicStructure } from "../../interfaces/music/musicStructure";
+import { PlaylistStructure } from "../../interfaces/playlist/playlistStructure";
 
 export class User {
-    constructor(public name: string, public email: string, public password: string, public currentMusic?: MusicStructure, public id?: ObjectId) {}
+    constructor(public name: string, public email: string, public password: string, public currentMusic?: MusicStructure, public id?: ObjectId, public playlists?: PlaylistStructure[]) {}
 }

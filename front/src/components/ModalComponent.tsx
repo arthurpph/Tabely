@@ -1,4 +1,6 @@
 import { useState, ChangeEvent } from 'react';
+import { decodeToken } from '../helpers/decodeToken';
+import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import '../assets/styles/ModalComponent.css';
@@ -23,14 +25,23 @@ function ModalComponent(props: ModalProps) {
         setInputValue(e.target.value);
     }
 
-    const handleSubmit = (): void => {
+    const handleSubmit = async (): Promise<void> => {
         if(inputValue.trim() === '') {
             setValidationValue("Please enter a correct value");
             return;
         }
 
-        resetValues();
-        handleModalClose();
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/playlist`, {
+                name: inputValue,
+                ownerId: decodeToken('', 'loginToken').id
+            });
+        } catch (err) {
+            console.error(err);
+        } finally {
+            resetValues();
+            handleModalClose();
+        }
     }
 
     return (
