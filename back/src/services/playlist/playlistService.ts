@@ -13,9 +13,17 @@ export class PlaylistService {
         }
     }
 
-    async createPlaylist(name: string, ownerId: number): Promise<void> {
+    async getPlaylist(playlistId: string): Promise<PlaylistStructure | null> {
         try {
-            this.playlistRepository.createPlaylist(name, ownerId);
+            return await this.playlistRepository.getPlaylist(playlistId)
+        } catch (err) {
+            throw err;
+        } 
+    }
+
+    async createPlaylist(playlistName: string, ownerId: number): Promise<void> {
+        try {
+            this.playlistRepository.createPlaylist(playlistName, ownerId);
         } catch (err) {
             throw err;
         }

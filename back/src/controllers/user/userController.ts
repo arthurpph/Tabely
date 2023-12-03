@@ -31,9 +31,19 @@ export class UserController {
         }
     }
 
+    async getUserById(req: Request, res: Response) {
+        try {
+            const { userId } = req.params;
+            const user = await this.userService.getUserById(userId);
+            res.json(user);
+        } catch (err) {
+            res.status(500).json({ error: 'Error while finding user', description: err});
+        }
+    }
+
     async addUser(req: Request, res: Response) {
         try {
-            const user = await this.userService.createUser(new User(req.body.name, req.body.email, req.body.password));
+            const user = await this.userService.createUser(new User(req.body.name, req.body.email, req.body.password, []));
             res.json(`Usuário ${user.name.charAt(0).toUpperCase() + user.name.slice(1)} criado com sucesso`);
         } catch (err) {
             res.status(500).json({ error: 'Error adding user', description: err});

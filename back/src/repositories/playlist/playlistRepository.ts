@@ -25,9 +25,11 @@ export class PlaylistRepository {
             
                         if(playlist) {
                             const mappedPlaylist: PlaylistStructure = {
+                                _id: playlist._id,
                                 name: playlist.name,
                                 musics: playlist.musics,
                                 ownerId: playlist.ownerId,
+                                imageURL: playlist.imageURL
                             };
 
                             playlists.push(mappedPlaylist);
@@ -42,13 +44,12 @@ export class PlaylistRepository {
         }
     }
 
-    async getPlaylist(name: string, ownerId: number): Promise<PlaylistStructure | null> {
+    async getPlaylist(playlistId: string): Promise<PlaylistStructure | null> {
         const db = this.client.db();
         const playlistsCollection = db.collection('playlists');
 
         const playlist = await playlistsCollection.findOne({
-            name: name,
-            ownerId: ownerId
+            _id: new ObjectId(playlistId)
         });
 
         if(playlist) {
@@ -56,7 +57,8 @@ export class PlaylistRepository {
                 _id: playlist._id,
                 name: playlist.name,
                 musics: playlist.musics,
-                ownerId: playlist.ownerId
+                ownerId: playlist.ownerId,
+                imageURL: playlist.imageURL
             }
         } else {
             return null;

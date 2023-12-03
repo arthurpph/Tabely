@@ -6,4 +6,5 @@ export interface PlaylistStructure {
     name: string;
     musics: MusicStructure[];
     ownerId: number;
+    imageURL: string | null;
 }

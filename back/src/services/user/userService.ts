@@ -20,7 +20,14 @@ export class UserService {
         } catch (err) {
             throw err;
         }
-        
+    }
+
+    async getUserById(userId: string): Promise<User | null> {
+        try {
+            return await this.userRepository.getUserById(userId)
+        } catch (err) {
+            throw err;
+        }
     }
 
     async createUser(user: User): Promise<User> {

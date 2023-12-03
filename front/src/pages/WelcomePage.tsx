@@ -1,10 +1,18 @@
 import { useNavigate } from 'react-router-dom';
+import { getCookie } from '../helpers/getCookie';
 import AppImage from '../assets/images/AppImage.png'
 import NavBar from "../components/Navbar";
 import '../assets/styles/WelcomePage.css'
+import { useEffect } from 'react';
 
 function WelcomePage() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(getCookie('loginToken')) {
+            return navigate('/');
+        }
+    }, [])
 
     return (
         <div>

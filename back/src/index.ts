@@ -61,6 +61,7 @@ app.get('/users', (req, res) => userController.getAllUsers(req, res));
 app.post('/users', (req, res) => userController.addUser(req, res));
 
 app.get('/user', (req, res) => userController.getUserByEmail(req, res));
+app.get('/user/:userId', (req, res) => userController.getUserById(req, res));
 app.put('/user/playlist', (req, res) => userController.addUserPlaylist(req, res));
 
 app.put('/music/user/:id', (req, res) => userController.changeUserCurrentMusic(req, res));
@@ -70,7 +71,8 @@ app.get('/musics', (req, res) => musicController.getMusics(req, res));
 app.post('/auth/login', (req, res) => authController.login(req, res));
 app.post('/auth/register', (req, res) => authController.register(req, res));
 
-app.get('/playlists', (req, res) => playlistController.getUserPlaylist(req, res));
+app.get('/playlists', (req, res) => playlistController.getUserPlaylists(req, res));
+app.get('/playlist', (req, res) => playlistController.getPlaylist(req, res));
 app.post('/playlist', (req, res) => playlistController.createPlaylist(req, res));
 
 app.listen(8080, () => {

@@ -16,7 +16,8 @@ export class UserRepository implements UserInterface {
                 id: user._id,
                 name: user.name,
                 email: user.email,
-                password: user.password
+                password: user.password,
+                playlists: user.playlists
             }));
         } catch (err) {
             throw err;
@@ -42,6 +43,32 @@ export class UserRepository implements UserInterface {
             }
 
             return null;            
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async getUserById(userId: string): Promise<User | null> {
+        try {
+            const db = this.client.db();
+            const usersCollection = db.collection('users');
+
+            const user = await usersCollection.findOne({ 
+                _id: new ObjectId(userId)
+            });
+
+            if(user) {
+                return {
+                    id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    password: user.password,
+                    currentMusic: user.currentMusic,
+                    playlists: user.playlists
+                }
+            }
+
+            return null;
         } catch (err) {
             throw err;
         }
