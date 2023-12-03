@@ -18,7 +18,7 @@ function Playlist() {
             try {
                 const params = new URLSearchParams(window.location.search);
                 const playlistId = params.get('playlistId');
-                console.log(playlistId)
+                
                 const playlist = await axios.get(`${import.meta.env.VITE_API_URL}/playlist?playlistId=${playlistId}`);
                 const playlistData = playlist.data;
 

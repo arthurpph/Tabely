@@ -94,6 +94,9 @@ function Player() {
 
             if(audio.paused) {
                 setPlayImageButton(PauseButton);
+                audio.addEventListener('canplaythrough', () => {
+                    audio.play();
+                });
                 audio.play();
             }
             else {
@@ -211,12 +214,16 @@ function Player() {
     }
 
     const changeMusic = (music: MusicStructure): void => {
+        const audio = audioRef.current;
         changeAccountCurrentMusic(music);
         changeAudioSrc(music.name, music.musicURL);
         setMusicName(music.name);
         setMusicImage(music.imageURL);
         setMusicDuration(music.duration);
         setPlayImageButton(PauseButton);
+        audio?.addEventListener('canplaythrough', () => {
+            audio.play();
+        });
     }
 
     const getUser = async (): Promise<UserInterface> => {
@@ -239,10 +246,6 @@ function Player() {
         if(audio) {
             audio.addEventListener('timeupdate', () => {
                 setCurrentTime(audio.currentTime);
-            });
-
-            audio.addEventListener('canplaythrough', () => {
-                audio.play();
             });
 
             audio.addEventListener('error', () => {
@@ -315,7 +318,7 @@ function Player() {
                     <button onClick={handlePlayPause}><img src={playButtonImage} alt="playButton"/></button>
                     <button onClick={goToNextMusic}><img src={NextTrack} id='musiccontrollerbutton' alt="nextTrackButton"/></button>
                 </div>
-                <audio ref={audioRef} autoplay="false" preload="metadata">
+                <audio ref={audioRef} preload="metadata">
                     <source type="audio/mpeg"/>
                 </audio>
                 <div className='musicinteraction'>

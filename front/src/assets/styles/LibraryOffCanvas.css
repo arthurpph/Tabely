@@ -1,6 +1,6 @@
 .library-offcanvas-header {
     background-color: #111111;
-    color: white;
+    color: #FFFFFF;
 }
 
 .library-offcanvas {
@@ -8,7 +8,7 @@
     flex-direction: column;
     justify-content: space-between;
     background-color: #111111;
-    color: white;
+    color: #FFFFFF;
 }
 
 .library-offcanvas .playlist-section {
