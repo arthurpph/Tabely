@@ -315,7 +315,7 @@ function Player() {
                     <button onClick={handlePlayPause}><img src={playButtonImage} alt="playButton"/></button>
                     <button onClick={goToNextMusic}><img src={NextTrack} id='musiccontrollerbutton' alt="nextTrackButton"/></button>
                 </div>
-                <audio ref={audioRef} preload="metadata">
+                <audio ref={audioRef} autoplay="false" preload="metadata">
                     <source type="audio/mpeg"/>
                 </audio>
                 <div className='musicinteraction'>
