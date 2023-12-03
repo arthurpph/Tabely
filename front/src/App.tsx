@@ -14,7 +14,7 @@ export const audioDB = new connectToIndexedDB('AudioDatabase', 1);
 
 function App() {
   const currentRoute = window.location.pathname;
-  const dontShowPlayer = currentRoute === '/login' || currentRoute === '/register' || currentRoute === '/welcome';
+  const showPlayer = ['/', '/playlist'].includes(currentRoute);
 
   return (
     <Router>
@@ -28,7 +28,7 @@ function App() {
           <Route path="/welcome" element={<WelcomePage/>}/>
           <Route path="*" element={<PageNotFound/>}/>
         </Routes>
-        {!dontShowPlayer && <Player/>}
+        {showPlayer && <Player/>}
       </Container>
     </Router>
   );
