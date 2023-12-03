@@ -34,7 +34,3 @@ main .main-section div button {
     font-size: 16px;
     cursor: pointer;
 }
-
-.player {
-    display: none;
-}
