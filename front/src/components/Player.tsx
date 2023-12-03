@@ -94,9 +94,6 @@ function Player() {
 
             if(audio.paused) {
                 setPlayImageButton(PauseButton);
-                audio.addEventListener('canplaythrough', () => {
-                    audio.play();
-                });
                 audio.play();
             }
             else {
@@ -221,9 +218,11 @@ function Player() {
         setMusicImage(music.imageURL);
         setMusicDuration(music.duration);
         setPlayImageButton(PauseButton);
-        audio?.addEventListener('canplaythrough', () => {
-            audio.play();
-        });
+        if(!firstMusicSetup) {
+            audio?.addEventListener('canplaythrough', () => {
+                audio.play();
+            });
+        }
     }
 
     const getUser = async (): Promise<UserInterface> => {
