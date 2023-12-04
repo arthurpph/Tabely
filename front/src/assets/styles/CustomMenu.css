@@ -1,0 +1,20 @@
+.custom-context-menu {
+    text-align: center;
+    background-color: #222222;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.custom-context-menu .custom-context-menu-item {
+    margin: 5px;
+    cursor: pointer;
+}
+
+.custom-context-menu .child {
+    border-bottom: 0.5px solid #333333;
+}
+.custom-context-menu .child:hover {
+    background-color: #333333;
+    border-radius: 5px;
+}

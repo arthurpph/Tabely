@@ -1,4 +1,4 @@
-import { userService } from "../..";
+import { ObjectId } from "mongodb";
 import { PlaylistStructure } from "../../interfaces/playlist/playlistStructure";
 import { PlaylistRepository } from "../../repositories/playlist/playlistRepository";
 
@@ -21,9 +21,25 @@ export class PlaylistService {
         } 
     }
 
-    async createPlaylist(playlistName: string, ownerId: number): Promise<void> {
+    async createPlaylist(playlistName: string, ownerId: number): Promise<ObjectId> {
         try {
-            this.playlistRepository.createPlaylist(playlistName, ownerId);
+            return this.playlistRepository.createPlaylist(playlistName, ownerId);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async updatePlaylistName(playlistId: string, newPlaylistName: string): Promise<void> {
+        try {
+            this.playlistRepository.updatePlaylist(playlistId, newPlaylistName);
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async deletePlaylist(playlistId: string): Promise<void> {
+        try {
+            this.playlistRepository.deletePlaylist(playlistId);
         } catch (err) {
             throw err;
         }

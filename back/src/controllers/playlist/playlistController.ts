@@ -27,8 +27,28 @@ export class PlaylistController {
     async createPlaylist(req: Request, res: Response): Promise<void> {
         try {
             const { name, ownerId } = req.body;
-            await this.playlistService.createPlaylist(name, ownerId);
-            res.json(`Playlist ${name} sucessfully created`);
+            const playlistId = await this.playlistService.createPlaylist(name, ownerId);
+            res.json({ playlistId: playlistId });
+        } catch (err) {
+            res.status(500).json({ error: err });
+        }
+    }
+
+    async updatePlaylist(req: Request, res: Response): Promise<void> {
+        try {
+            const { playlistId, playlistName } = req.body;
+            await this.playlistService.updatePlaylistName(playlistId, playlistName);
+            res.json(`Playlist ${playlistId} successfully updated`);
+        } catch (err) {
+            res.status(500).json({ error: err});
+        }
+    }
+
+    async deletePlaylist(req: Request, res: Response): Promise<void> {
+        try {
+            const playlistId = req.query.playlistId as string;
+            await this.playlistService.deletePlaylist(playlistId);
+            res.json(`Playlist ${playlistId} successfully deleted`);
         } catch (err) {
             res.status(500).json({ error: err });
         }

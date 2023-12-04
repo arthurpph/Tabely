@@ -41,10 +41,10 @@ function LibraryOffCanvas(props: LibraryOffCanvasProps) {
                     <div className="playlist-section">
                         {playlists.map((playlist, index) => (
                             <div className="playlist" key={index} style={{ cursor: 'pointer' }} onClick={() => {
-                                navigate('/');
-                                setTimeout(() => {
-                                    navigate(`/playlist?playlistId=${playlist._id}`);
-                                }, 0.1)
+                                    navigate('/');
+                                    setTimeout(() => {
+                                        navigate(`/playlist?playlistId=${playlist._id}`);
+                                    }, 0.1)
                                 }
                             }>
                                 <button>

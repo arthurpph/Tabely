@@ -1,27 +1,58 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { MusicStructure } from "../interfaces/musicStructure";
 import { TailSpin } from 'react-loader-spinner';
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import CustomMenu from "../components/CustomMenu";
 import "../assets/styles/Playlist.css"
+import UpdatePlaylistModal from "../components/UpdatePlaylistModal";
 
 function Playlist() {
     const [IsPlaylistLoaded, setIsPlaylistLoaded] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
+    const [playlistId, setPlaylistId] = useState<string | null>('');
     const [playlistName, setPlaylistName] = useState<string>('');
     const [playlistOwnerName, setPlaylistOwnerName] = useState<string>('');
     const [playlistMusics, setPlaylistMusics] = useState<MusicStructure[]>([]);
     const [playlistImageURL, setPlaylistImageURL] = useState<string>('');
     const [customImage, setCustomImage] = useState<boolean>(false);
+    const [contextMenuVisible, setContextMenuVisible] = useState<boolean>(false);
+    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+    const [showUpdatePlaylistModel, setShowUpdatePlaylistModel] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    const handleContextMenu = (e: React.MouseEvent<HTMLParagraphElement>) => {
+        e.preventDefault();
+        setContextMenuVisible(true);
+        setContextMenuPosition({ x: e.clientX, y: e.clientY });
+    }
+
+    const deletePlaylist = async () => {
+        if(!playlistId) {
+            return;
+        }
+
+        if(confirm('You want to delete this playlist?')) {
+            try {
+                await axios.delete(`${import.meta.env.VITE_API_URL}/playlist?playlistId=${playlistId}`);
+                navigate('/');
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    }
 
     useEffect(() => {
         const getPlaylistInfo = async (): Promise<void> => {
             try {
                 const params = new URLSearchParams(window.location.search);
                 const playlistId = params.get('playlistId');
-                
+
                 const playlist = await axios.get(`${import.meta.env.VITE_API_URL}/playlist?playlistId=${playlistId}`);
                 const playlistData = playlist.data;
 
+                setPlaylistId(playlistId);
                 setPlaylistName(playlistData.name);
                 setPlaylistMusics(playlistData.musics);
                 setPlaylistImageURL(playlistData.imageURL);
@@ -32,6 +63,7 @@ function Playlist() {
                 setPlaylistOwnerName(userData.name);
                 setIsPlaylistLoaded(true);
             } catch (err) {
+                setIsError(true);
                 console.error(err);
             }
         }
@@ -40,7 +72,7 @@ function Playlist() {
     }, [])
 
     return (
-        <div>
+        <div onClick={() => setContextMenuVisible(false)}>
             <Navbar/>
                 {IsPlaylistLoaded ?
                     <div className="playlist-container">
@@ -58,7 +90,8 @@ function Playlist() {
                             </>
                             }
                             <div className="playlist-info-name">
-                                <p className="playlist-info-playlist-name">{playlistName}</p>
+                                <p className="playlist-info-playlist-name" style={{ cursor: 'pointer' }} onContextMenu={handleContextMenu} onClick={() => setShowUpdatePlaylistModel(true)}>{playlistName}</p>
+                                <CustomMenu contextMenuVisible={contextMenuVisible} contextMenuPosition={contextMenuPosition} menuItems={[{text: 'Delete Playlist', function: deletePlaylist}]}/>
                                 <button><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
                             </div>
                         </div>
@@ -101,22 +134,34 @@ function Playlist() {
                         </div>
                     </div>
                 :
-                    <div className="playlist-container">
-                        <TailSpin
-                        height="80"
-                        width="80"
-                        color="#808080"
-                        ariaLabel="tail-spin-loading"
-                        radius="1"
-                        wrapperStyle={{}}
-                        wrapperClass=""
-                        visible={true}
-                        />
-                    </div>
+                    <>
+                        {isError ? 
+                            <div className="playlist-container">
+                                Playlist doesn't exist
+                            </div>
+                        :
+                            <div className="playlist-container">
+                                <TailSpin
+                                height="80"
+                                width="80"
+                                color="#808080"
+                                ariaLabel="tail-spin-loading"
+                                radius="1"
+                                wrapperStyle={{}}
+                                wrapperClass=""
+                                visible={true}
+                                />
+                            </div> 
+                        }
+                        
+                    </>
+                    
+                      
                 }
             {customImage && 
                     <img className="background-image" src={playlistImageURL}/>
-            } 
+            }
+            <UpdatePlaylistModal showUpdatePlaylistModal={showUpdatePlaylistModel} setShowUpdatePlaylistModal={setShowUpdatePlaylistModel} setPlaylistName={setPlaylistName}/>
         </div>
     );
 }

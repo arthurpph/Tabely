@@ -222,6 +222,8 @@ function Player() {
             audio?.addEventListener('canplaythrough', () => {
                 audio.play();
             });
+        } else {
+            audio?.pause();
         }
     }
 

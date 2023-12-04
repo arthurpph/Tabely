@@ -65,7 +65,7 @@ export class PlaylistRepository {
         }
     }
 
-    async createPlaylist(name: string, ownerId: number): Promise<void> {
+    async createPlaylist(name: string, ownerId: number): Promise<ObjectId> {
         try {
             const db = this.client.db();
             const playlistsCollection = db.collection('playlists');
@@ -79,6 +79,53 @@ export class PlaylistRepository {
             const playlistId: ObjectId = createdPlaylist.insertedId;
 
             await userService.addUserPlaylist(ownerId, playlistId);
+
+            return playlistId
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async updatePlaylist(playlistId: string, newPlaylistName: string): Promise<void> {
+        try {
+            const db = this.client.db();
+            const playlistsCollection = db.collection('playlists');
+
+            await playlistsCollection.updateOne({
+                _id: new ObjectId(playlistId)
+            }, {
+                $set: { name: newPlaylistName }
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async deletePlaylist(playlistId: string): Promise<void> {
+        try {
+            const db = this.client.db();
+            const playlistsCollection = db.collection('playlists');
+
+            const playlist = await playlistsCollection.findOne({
+                _id: new ObjectId(playlistId)
+            });
+
+            if(!playlist) {
+                throw new Error('Playlist not found');
+            }
+            const ownerId = playlist.ownerId;
+
+            await playlistsCollection.deleteOne({
+                _id: new ObjectId(playlistId)
+            });
+
+            const usersCollection = db.collection('users');
+
+            await usersCollection.updateOne({
+                _id: new ObjectId(ownerId)
+            }, {
+                $pull: { playlists: new ObjectId(playlistId) }
+            });
         } catch (err) {
             throw err;
         }

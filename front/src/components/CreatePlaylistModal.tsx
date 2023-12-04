@@ -1,9 +1,10 @@
 import { useState, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { decodeToken } from '../helpers/decodeToken';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import '../assets/styles/ModalComponent.css';
+import '../assets/styles/CreatePlaylistModal.css';
 
 interface ModalProps {
     showModal: boolean;
@@ -15,6 +16,7 @@ function ModalComponent(props: ModalProps) {
 
     const [inputValue, setInputValue] = useState<string>('');
     const [validationValue, setValidationValue] = useState<string>('');
+    const navigate = useNavigate();
 
     const resetValues = (): void => {
         setInputValue('');
@@ -32,10 +34,11 @@ function ModalComponent(props: ModalProps) {
         }
 
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/playlist`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/playlist`, {
                 name: inputValue,
                 ownerId: decodeToken('', 'loginToken').id
             });
+            navigate(`/playlist?playlistId=${response.data.playlistId}`)
         } catch (err) {
             console.error(err);
         } finally {
