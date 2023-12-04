@@ -29,10 +29,6 @@ function Playlist() {
     }
 
     const deletePlaylist = async () => {
-        if(!playlistId) {
-            return;
-        }
-
         if(confirm('You want to delete this playlist?')) {
             try {
                 await axios.delete(`${import.meta.env.VITE_API_URL}/playlist?playlistId=${playlistId}`);
@@ -91,40 +87,11 @@ function Playlist() {
                             }
                             <div className="playlist-info-name">
                                 <p className="playlist-info-playlist-name" style={{ cursor: 'pointer' }} onContextMenu={handleContextMenu} onClick={() => setShowUpdatePlaylistModel(true)}>{playlistName}</p>
-                                <CustomMenu contextMenuVisible={contextMenuVisible} contextMenuPosition={contextMenuPosition} menuItems={[{text: 'Delete Playlist', function: deletePlaylist}]}/>
+                                <CustomMenu contextMenuVisible={contextMenuVisible} contextMenuPosition={contextMenuPosition} menuItems={[{ text: 'Delete Playlist', function: deletePlaylist }]}/>
                                 <button><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
                             </div>
                         </div>
                         <div className="musics-container">
-                                <div>
-                                    <p>Teste</p>
-                                    <p>Teste</p>
-                                </div>
-                                <div>
-                                    <p>Teste</p>
-                                    <p>Teste</p>
-                                </div>
-                                <div>
-                                    <p>Teste</p>
-                                    <p>Teste</p>
-                                </div>
-                                <div>
-                                    <p>Teste</p>
-                                    <p>Teste</p>
-                                </div>
-                                <div>
-                                    <p>Teste</p>
-                                    <p>Teste</p>
-                                </div>
-                                <div>
-                                    <p>Teste</p>
-                                    <p>Teste</p>
-                                </div>
-                                <div>
-                                    <p>Teste</p>
-                                    <p>Teste</p>
-                                </div>
-
                             {playlistMusics.map((music, index) => (
                                 <div key={index}>
                                     <p>{music.name}</p>
@@ -142,14 +109,14 @@ function Playlist() {
                         :
                             <div className="playlist-container">
                                 <TailSpin
-                                height="80"
-                                width="80"
-                                color="#808080"
-                                ariaLabel="tail-spin-loading"
-                                radius="1"
-                                wrapperStyle={{}}
-                                wrapperClass=""
-                                visible={true}
+                                    height="80"
+                                    width="80"
+                                    color="#808080"
+                                    ariaLabel="tail-spin-loading"
+                                    radius="1"
+                                    wrapperStyle={{}}
+                                    wrapperClass=""
+                                    visible={true}
                                 />
                             </div> 
                         }
