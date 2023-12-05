@@ -1,6 +1,7 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { userService } from "../..";
 import { PlaylistStructure } from "../../interfaces/playlist/playlistStructure";
+import { MusicStructure } from "../../interfaces/music/musicStructure";
 
 export class PlaylistRepository {
     constructor(readonly client: MongoClient) {}
@@ -86,14 +87,31 @@ export class PlaylistRepository {
         }
     }
 
-    async updatePlaylist(playlistId: string, newPlaylistName: string): Promise<void> {
+    async addPlaylistMusic(playlistId: string, music: MusicStructure): Promise<void> {
         try {
             const db = this.client.db();
             const playlistsCollection = db.collection('playlists');
 
             await playlistsCollection.updateOne({
                 _id: new ObjectId(playlistId)
-            }, {
+            },
+            {
+                $push: { musics: music }
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async updatePlaylistName(playlistId: string, newPlaylistName: string): Promise<void> {
+        try {
+            const db = this.client.db();
+            const playlistsCollection = db.collection('playlists');
+
+            await playlistsCollection.updateOne({
+                _id: new ObjectId(playlistId)
+            }, 
+            {
                 $set: { name: newPlaylistName }
             });
         } catch (err) {
@@ -123,7 +141,8 @@ export class PlaylistRepository {
 
             await usersCollection.updateOne({
                 _id: new ObjectId(ownerId)
-            }, {
+            }, 
+            {
                 $pull: { playlists: new ObjectId(playlistId) }
             });
         } catch (err) {

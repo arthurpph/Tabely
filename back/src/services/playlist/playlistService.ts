@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { PlaylistStructure } from "../../interfaces/playlist/playlistStructure";
 import { PlaylistRepository } from "../../repositories/playlist/playlistRepository";
+import { MusicStructure } from "../../interfaces/music/musicStructure";
 
 export class PlaylistService {
     constructor(readonly playlistRepository: PlaylistRepository) {}
@@ -29,9 +30,17 @@ export class PlaylistService {
         }
     }
 
+    async addPlaylistMusic(playlistId: string, music: MusicStructure): Promise<void> {
+        try {
+            this.playlistRepository.addPlaylistMusic(playlistId, music);
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async updatePlaylistName(playlistId: string, newPlaylistName: string): Promise<void> {
         try {
-            this.playlistRepository.updatePlaylist(playlistId, newPlaylistName);
+            this.playlistRepository.updatePlaylistName(playlistId, newPlaylistName);
         } catch (err) {
             throw err;
         }

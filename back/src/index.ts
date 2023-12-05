@@ -75,6 +75,7 @@ app.get('/playlists', (req, res) => playlistController.getUserPlaylists(req, res
 app.get('/playlist', (req, res) => playlistController.getPlaylist(req, res));
 app.post('/playlist', (req, res) => playlistController.createPlaylist(req, res));
 app.put('/playlist', (req, res) => playlistController.updatePlaylist(req, res));
+app.put('/playlist/music', (req, res) => playlistController.addPlaylistMusic(req, res));
 app.delete('/playlist', (req, res) => playlistController.deletePlaylist(req, res));
 
 app.listen(8080, () => {

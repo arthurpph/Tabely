@@ -34,6 +34,16 @@ export class PlaylistController {
         }
     }
 
+    async addPlaylistMusic(req: Request, res: Response): Promise<void> {
+        try {
+            const { playlistId, music } = req.body;
+            await this.playlistService.addPlaylistMusic(playlistId, music);
+            res.json(`Music ${music} successfully added to playlist ${playlistId}`);
+        } catch (err) {
+            res.status(500).json({ error: err });
+        }
+    }
+
     async updatePlaylist(req: Request, res: Response): Promise<void> {
         try {
             const { playlistId, playlistName } = req.body;
