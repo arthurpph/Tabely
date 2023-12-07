@@ -49,7 +49,7 @@ function MainBottom() {
     }, []);
 
     return (
-        <div style={{ fontFamily: 'Inter, sans-serif' }} className='mainbottom' onClick={() => setContextMenuVisible(false)}>
+        <div style={{ fontFamily: 'Inter, sans-serif' }} className='mainbottom'>
             <div className='musicstab'>
                 <p>Songs available</p>
                 {isMusicsLoaded ?
