@@ -14,10 +14,11 @@ interface QueueOffCanvasProps {
     queue: MusicStructure[];
     setMusic: (music: MusicStructure) => void;
     changeQueue: (index: number) => void;
+    currentPlaylist: string | null;
 }
 
 function QueueOffCanvas(props: QueueOffCanvasProps) {
-    const { showQueue, handleClose, queue, setMusic, changeQueue } = props;
+    const { showQueue, handleClose, queue, setMusic, changeQueue, currentPlaylist } = props;
 
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
 
@@ -45,6 +46,9 @@ function QueueOffCanvas(props: QueueOffCanvasProps) {
             </Offcanvas.Header>
             <Offcanvas.Body>
                 <div className="queue-container">
+                    {currentPlaylist && 
+                        <h5>Playing: {currentPlaylist}</h5>
+                    }
                     {queue.map((music, index) => (
                         <div key={index}>
                             {index + 1}

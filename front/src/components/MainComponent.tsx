@@ -4,19 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 import { MusicStructure } from '../interfaces/musicStructure';
-import { PlaylistStructure } from '../interfaces/playlistStructure';
-import { decodeToken } from '../helpers/decodeToken';
 import axios from 'axios';
-import CustomMenu from './CustomMenu';
 import '../assets/styles/MainComponent.css'
 
 function MainBottom() {
     const [isMusicsLoaded, setIsMusicsLoaded] = useState<boolean>(false);
     const [musics, setMusics] = useState<MusicStructure[]>([]);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
-    const [contextMenuVisible, setContextMenuVisible] = useState<boolean>(false);
-    const [contextMenuPosition, setContextMenuPosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
-    const [playlists, setPlaylists] = useState<PlaylistStructure[]>([]);
 
     const reproductionIconMouseEnter = (index: number) => {
         setHighlightedIndex(index);
@@ -28,12 +22,6 @@ function MainBottom() {
 
     const musicReproduction = (index: number) => {
         setMusic(musics[index]);
-    }
-
-    const handleContextMenu = (e: React.MouseEvent<HTMLParagraphElement>) => {
-        e.preventDefault();
-        setContextMenuVisible(true);
-        setContextMenuPosition({ x: e.clientX, y: e.clientY });
     }
 
     useEffect(() => {
@@ -56,16 +44,8 @@ function MainBottom() {
             setMusics(allMusics);
             setIsMusicsLoaded(true);
         }
-
-        const getUserPlaylists = async (): Promise<void> => {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/playlists?email=${decodeToken('', 'loginToken').email}`);
-            const data = response.data;
-            console.log(data)
-            setPlaylists(data);
-        }
     
         loadMusics();
-        getUserPlaylists();
     }, []);
 
     return (
@@ -84,7 +64,6 @@ function MainBottom() {
                                     onMouseEnter={() => reproductionIconMouseEnter(index)} 
                                     onMouseLeave={() => reproductionIconMouseLeave()}
                                     onClick={() => musicReproduction(index)}
-                                    onContextMenu={handleContextMenu}
                                 />
                                 <FontAwesomeIcon 
                                     icon={faPlay} 
@@ -96,7 +75,6 @@ function MainBottom() {
                                     onClick={() => musicReproduction(index)} 
                                     key={index}
                                 />
-                                    <CustomMenu contextMenuVisible={contextMenuVisible} contextMenuPosition={contextMenuPosition} menuItems={[{ text: 'Add to Playlist', subMenu: playlists.map(playlist => ({ text: playlist.name }) )}]} />
                                 <h3>{music.name}</h3>
                                 <p>{music.artist}</p>
                             </div>

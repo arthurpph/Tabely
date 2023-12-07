@@ -1,0 +1,64 @@
+.search-music-modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #808080;
+}
+
+.search-music-modal-title input {
+    padding: 10px;
+    background-color: #444444;
+    border-radius: 10px;
+    color: #FFFFFF;
+}
+
+.search-music-modal-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: start;
+    overflow: scroll;
+    background-color: #808080;
+}
+
+.search-music-modal-body::-webkit-scrollbar {
+    width: 0px;
+}
+
+.search-music-modal-body div {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.search-music-modal-body div img {
+    width: 100px;
+    height: 80px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-music-modal-body div div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 30px;
+}
+
+.search-music-modal-body div div span {
+    font-size: 14px;
+    margin: 5px;
+    color: #fcfcfc;
+}
+
+.search-music-modal-body div div .search-music-modal-music-name {
+    max-width: 100px;
+}
+
+.search-music-modal-body div div .reduced-font-size {
+    font-size: 11px;
+    margin: 5px;
+    color: #070707;
+}

@@ -14,6 +14,7 @@ import Button from 'react-bootstrap/Button';
 import '../assets/styles/Player.css';
 
 let setMusic: (music: MusicStructure) => void;
+let buildQueue: (musics: MusicStructure[] | undefined, playlist?: string) => Promise<void>;
 
 function Player() {
     const [playButtonImage, setPlayImageButton] = useState<string>(playButton);
@@ -29,6 +30,7 @@ function Player() {
     const [musicImage, setMusicImage] = useState<string>('');
     const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(true);
     const [downloadedMusics, setDownloadedMusics] = useState<{ name: string, blobURL: string }[]>([]);
+    const [currentPlaylist, setCurrentPlaylist] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const downloadMusic = async (name: string, musicURL: string): Promise<void> => {
@@ -55,28 +57,40 @@ function Player() {
         }
     }
 
-    const buildQueue = async (): Promise<void> => {
+    const getMusics = async (): Promise<MusicStructure[] | undefined> => {
         try {
             const musics = await axios.get(`${import.meta.env.VITE_API_URL}/musics`);
             const data = musics.data;
-            const newQueue = [...queue];
-
-            for(let i = 0; i < 10; i++) {
-                const randomIndex = Math.floor(Math.random() * data.length);
-                const randomMusic = data[randomIndex];
-                newQueue.push({
-                    name: randomMusic.name,
-                    artist: randomMusic.artist,
-                    imageURL: randomMusic.imageURL,
-                    musicURL: randomMusic.musicURL,
-                    duration: randomMusic.duration
-                });
-            }
-
-            setQueue(newQueue);
+            return data;
         } catch (err) {
             console.error(err);
         }
+    }
+
+    buildQueue = async (musics: MusicStructure[] | undefined, playlist?: string): Promise<void> => {
+        if(!musics) {
+            return;
+        }
+
+        const newQueue = [];
+
+        for(let i = 0; i < 10; i++) {
+            const randomIndex = Math.floor(Math.random() * musics.length);
+            const randomMusic = musics[randomIndex];
+            newQueue.push({
+                name: randomMusic.name,
+                artist: randomMusic.artist,
+                imageURL: randomMusic.imageURL,
+                musicURL: randomMusic.musicURL,
+                duration: randomMusic.duration
+            });
+        }
+
+        if(playlist) {
+            setCurrentPlaylist(playlist)
+        }
+
+        setQueue(newQueue);
     }
 
     const changeQueue = (index: number): void => {
@@ -190,11 +204,9 @@ function Player() {
             const musicIsDownloaded = await audioDB.checkIfKeyExists(musicName);
             if(musicIsDownloaded instanceof Blob) {
                 audio.src = URL.createObjectURL(musicIsDownloaded);
-            } 
-            else if(musicIsOnCache.length > 0) {
+            } else if(musicIsOnCache.length > 0) {
                 audio.src = musicIsOnCache[0].blobURL;
-            } 
-            else {
+            } else {
                 downloadMusic(musicName, musicURL);
                 audio.src = musicURL;
             }
@@ -243,29 +255,32 @@ function Player() {
     }
 
     useEffect(() => {
-        const audio = audioRef.current;
-        if(audio) {
-            audio.addEventListener('timeupdate', () => {
-                setCurrentTime(audio.currentTime);
-            });
+        const componentBuild = async () => {
+            const audio = audioRef.current;
+            if(audio) {
+                audio.addEventListener('timeupdate', () => {
+                    setCurrentTime(audio.currentTime);
+                });
 
-            audio.addEventListener('error', () => {
-                audio.load();
-            });
+                audio.addEventListener('error', () => {
+                    audio.load();
+                });
 
-            buildQueue();
+                buildQueue(await getMusics());
 
-            const musicVolume = localStorage.getItem('player-volume');
+                const musicVolume = localStorage.getItem('player-volume');
 
-            if(musicVolume) {
-                audio.volume = parseFloat(musicVolume);
-                setCurrentVolume(audio.volume * 100);
-            } 
-            else {
-                audio.volume = 0.5;
-                setCurrentVolume(40);
+                if(musicVolume) {
+                    audio.volume = parseFloat(musicVolume);
+                    setCurrentVolume(audio.volume * 100);
+                } else {
+                    audio.volume = 0.5;
+                    setCurrentVolume(40);
+                }
             }
         }
+
+        componentBuild();
     }, []);
 
     useEffect(() => {
@@ -282,19 +297,16 @@ function Player() {
                         if(user.currentMusic) {
                             changeMusic(user.currentMusic);
                             setPlayImageButton(playButton);
-                        } 
-                        else {
+                        } else {
                             goToNextMusic();
                         }
-                    } 
-                    else {
+                    } else {
                         goToNextMusic();
                     }
                     setFirstMusicSetup(false);
                 }
-            } 
-            else if(queue.length === 0) {
-                buildQueue();
+            } else if(queue.length === 0) {
+                buildQueue(await getMusics());
             }
         }
 
@@ -354,6 +366,7 @@ function Player() {
                             queue={queue}
                             setMusic={setMusic}
                             changeQueue={changeQueue}
+                            currentPlaylist={currentPlaylist}
                         />
                     </div>
                 </div>
@@ -362,6 +375,6 @@ function Player() {
     );
 }
 
-export { setMusic }
+export { setMusic, buildQueue }
 
 export default Player;

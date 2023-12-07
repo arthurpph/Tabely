@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MusicStructure } from "../interfaces/musicStructure";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
+import { setMusic, buildQueue } from "../components/Player";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import CustomMenu from "../components/CustomMenu";
-import "../assets/styles/Playlist.css"
 import UpdatePlaylistModal from "../components/UpdatePlaylistModal";
+import SearchMusicModal from "../components/SearchMusicModal";
+import "../assets/styles/Playlist.css"
 
 function Playlist() {
     const [IsPlaylistLoaded, setIsPlaylistLoaded] = useState<boolean>(false);
@@ -20,6 +24,8 @@ function Playlist() {
     const [contextMenuVisible, setContextMenuVisible] = useState<boolean>(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
     const [showUpdatePlaylistModel, setShowUpdatePlaylistModel] = useState<boolean>(false);
+    const [showSearchMusicModel, setShowSearchMusicModel] = useState<boolean>(false);
+    const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
     const navigate = useNavigate();
 
     const handleContextMenu = (e: React.MouseEvent<HTMLParagraphElement>) => {
@@ -39,31 +45,32 @@ function Playlist() {
         }
     }
 
-    useEffect(() => {
-        const getPlaylistInfo = async (): Promise<void> => {
-            try {
-                const params = new URLSearchParams(window.location.search);
-                const playlistId = params.get('playlistId');
+    const getPlaylistInfo = async (): Promise<void> => {
+        try {
+            setIsPlaylistLoaded(false);
+            const params = new URLSearchParams(window.location.search);
+            const playlistId = params.get('playlistId');
 
-                const playlist = await axios.get(`${import.meta.env.VITE_API_URL}/playlist?playlistId=${playlistId}`);
-                const playlistData = playlist.data;
+            const playlist = await axios.get(`${import.meta.env.VITE_API_URL}/playlist?playlistId=${playlistId}`);
+            const playlistData = playlist.data;
 
-                setPlaylistId(playlistId);
-                setPlaylistName(playlistData.name);
-                setPlaylistMusics(playlistData.musics);
-                setPlaylistImageURL(playlistData.imageURL);
+            setPlaylistId(playlistId);
+            setPlaylistName(playlistData.name);
+            setPlaylistMusics(playlistData.musics);
+            setPlaylistImageURL(playlistData.imageURL);
 
-                const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${playlistData.ownerId}`);
-                const userData = user.data;
+            const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${playlistData.ownerId}`);
+            const userData = user.data;
 
-                setPlaylistOwnerName(userData.name);
-                setIsPlaylistLoaded(true);
-            } catch (err) {
-                setIsError(true);
-                console.error(err);
-            }
+            setPlaylistOwnerName(userData.name);
+            setIsPlaylistLoaded(true);
+        } catch (err) {
+            setIsError(true);
+            console.error(err);
         }
+    }
 
+    useEffect(() => {
         getPlaylistInfo();
     }, [])
 
@@ -91,11 +98,38 @@ function Playlist() {
                                 <button><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
                             </div>
                         </div>
+                        <button id="add-music-button" onClick={() => setShowSearchMusicModel(true)}>Add Music</button>
                         <div className="musics-container">
                             {playlistMusics.map((music, index) => (
                                 <div key={index}>
-                                    <p>{music.name}</p>
-                                    <p>{music.artist}</p>
+                                    <img 
+                                        src={music.imageURL} 
+                                        alt={`Music Image ${index}`} 
+                                        style={{ opacity: highlightedIndex === index ? 0.2 : 1, transition: 'opacity 0.4s ease', cursor: 'pointer' }}
+                                        onMouseEnter={() => setHighlightedIndex(index)} 
+                                        onMouseLeave={() => setHighlightedIndex(-1)}
+                                        onClick={() => {
+                                            buildQueue(playlistMusics, playlistName);
+                                            setMusic(music);
+                                        }}
+                                    />
+                                    <FontAwesomeIcon 
+                                        icon={faPlay} 
+                                        size="2x" 
+                                        style={{ position: 'relative', right: '3.7rem' , opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease', cursor: 'pointer' }} 
+                                        className={`reproductionicon${index}`} 
+                                        onMouseEnter={() => setHighlightedIndex(index)} 
+                                        onMouseLeave={() => setHighlightedIndex(-1)}
+                                        onClick={() => {
+                                            buildQueue(playlistMusics, playlistName);
+                                            setMusic(music);
+                                        }}
+                                        key={index}
+                                    />
+                                    <div>
+                                        <p>{music.name}</p>
+                                        <span>{music.artist}</span>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -125,10 +159,13 @@ function Playlist() {
                     
                       
                 }
+
             {customImage && 
                     <img className="background-image" src={playlistImageURL}/>
             }
+
             <UpdatePlaylistModal showUpdatePlaylistModal={showUpdatePlaylistModel} setShowUpdatePlaylistModal={setShowUpdatePlaylistModel} setPlaylistName={setPlaylistName}/>
+            <SearchMusicModal showSearchMusicModal={showSearchMusicModel} setShowSearchMusicModal={setShowSearchMusicModel} getPlaylistInfo={getPlaylistInfo}/>
         </div>
     );
 }

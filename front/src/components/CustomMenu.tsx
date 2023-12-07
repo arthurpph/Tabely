@@ -13,7 +13,7 @@ function CustomMenu(props: CustomMenuProps) {
     const [hoveredMenuItem, setHoveredMenuItem] = useState<number>(-1);
 
     const handleMenuItemClick = (item: any) => {
-        if(!item.subMenu) {
+        if(!item.subMenu && item.function) {
             item.function();
         }
     }
@@ -27,8 +27,8 @@ function CustomMenu(props: CustomMenuProps) {
             {contextMenuVisible && (
                 <div className="custom-context-menu" id="customContextMenu" style={{ position: 'fixed', left: contextMenuPosition.x, top: contextMenuPosition.y }}>
                     {menuItems.map((item, index) => (
-                        <div className={`custom-context-menu-item child ${item.subMenu ? 'has-submenu' : ''}`} key={index} onClick={() => handleMenuItemClick(item)} >
-                            <span onMouseEnter={() => setHoveredMenuItem(index)}>
+                        <div className={`custom-context-menu-item child ${item.subMenu ? 'has-submenu' : ''}`} key={index}>
+                            <span onMouseEnter={() => setHoveredMenuItem(index)} onClick={() => handleMenuItemClick(item)}>
                                 {item.text}
                             </span>
                             {item.subMenu && hoveredMenuItem === index && (
