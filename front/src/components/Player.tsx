@@ -13,8 +13,7 @@ import NextTrack from '../assets/images/NextTrack.svg';
 import Button from 'react-bootstrap/Button';
 import '../assets/styles/Player.css';
 
-let setMusic: (music: MusicStructure) => void;
-let buildQueue: (musics: MusicStructure[] | undefined, playlist?: string) => Promise<void>;
+let setMusic: (music: MusicStructure, buildQueueMusics?: MusicStructure[], playlistName?: string) => void;
 
 function Player() {
     const [playButtonImage, setPlayImageButton] = useState<string>(playButton);
@@ -42,7 +41,7 @@ function Player() {
         }]);
     }
 
-    setMusic = (music: MusicStructure): void => {
+    setMusic = (music: MusicStructure, buildQueueMusics?: MusicStructure[], playlistName?: string): void => {
         const audio = audioRef.current;
         if(audio) {
             changeMusic(music);
@@ -54,6 +53,12 @@ function Player() {
                 duration: music.duration
             }]);
             setCurrentMusicIndex(reproducedMusics.length);
+        }
+
+        setCurrentPlaylist(playlistName ? playlistName : null);
+
+        if(buildQueueMusics) {
+            buildQueue(buildQueueMusics);
         }
     }
 
@@ -67,7 +72,7 @@ function Player() {
         }
     }
 
-    buildQueue = async (musics: MusicStructure[] | undefined, playlist?: string): Promise<void> => {
+    const buildQueue = async (musics: MusicStructure[] | undefined): Promise<void> => {
         if(!musics) {
             return;
         }
@@ -84,10 +89,6 @@ function Player() {
                 musicURL: randomMusic.musicURL,
                 duration: randomMusic.duration
             });
-        }
-
-        if(playlist) {
-            setCurrentPlaylist(playlist)
         }
 
         setQueue(newQueue);
@@ -375,6 +376,6 @@ function Player() {
     );
 }
 
-export { setMusic, buildQueue }
+export { setMusic }
 
 export default Player;

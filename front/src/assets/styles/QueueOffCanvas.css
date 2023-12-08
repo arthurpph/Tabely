@@ -13,11 +13,13 @@
 
 .offcanvas-body .queue-container {
     position: relative;
-}
-
-.offcanvas-body .queue-container {
     margin-bottom: 30px;
     font-size: 13px;
+}
+
+.offcanvas-body .queue-container h5 {
+    text-align: center;
+    font-size: 14px;
 }
 
 .offcanvas-body .queue-container div img {

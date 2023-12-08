@@ -52,7 +52,7 @@ function QueueOffCanvas(props: QueueOffCanvasProps) {
                     {queue.map((music, index) => (
                         <div key={index}>
                             {index + 1}
-                            <img 
+                            <img
                                 src={music.imageURL} 
                                 alt={`Music Image ${index}`}
                                 style={{ opacity: highlightedIndex === index ? 0.2 : 1, transition: 'opacity 0.4s ease' }} 

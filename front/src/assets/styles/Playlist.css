@@ -95,6 +95,10 @@
     overflow: auto;
 }
 
+.playlist-container .musics-container .counter {
+    margin-right: 20px;
+}
+
 .playlist-container .musics-container::-webkit-scrollbar {
     width: 10px;
     height: 5px;
@@ -121,7 +125,7 @@
     display: flex;
     flex-direction: column;
     margin: auto;
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 .playlist-container .musics-container div div span {

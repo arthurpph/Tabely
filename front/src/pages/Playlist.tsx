@@ -4,7 +4,7 @@ import { MusicStructure } from "../interfaces/musicStructure";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
-import { setMusic, buildQueue } from "../components/Player";
+import { setMusic } from "../components/Player";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import CustomMenu from "../components/CustomMenu";
@@ -102,6 +102,7 @@ function Playlist() {
                         <div className="musics-container">
                             {playlistMusics.map((music, index) => (
                                 <div key={index}>
+                                    <span className="counter">{index + 1}</span>
                                     <img 
                                         src={music.imageURL} 
                                         alt={`Music Image ${index}`} 
@@ -109,8 +110,7 @@ function Playlist() {
                                         onMouseEnter={() => setHighlightedIndex(index)} 
                                         onMouseLeave={() => setHighlightedIndex(-1)}
                                         onClick={() => {
-                                            buildQueue(playlistMusics, playlistName);
-                                            setMusic(music);
+                                            setMusic(music, playlistMusics, playlistName);
                                         }}
                                     />
                                     <FontAwesomeIcon 
@@ -121,8 +121,7 @@ function Playlist() {
                                         onMouseEnter={() => setHighlightedIndex(index)} 
                                         onMouseLeave={() => setHighlightedIndex(-1)}
                                         onClick={() => {
-                                            buildQueue(playlistMusics, playlistName);
-                                            setMusic(music);
+                                            setMusic(music, playlistMusics, playlistName);
                                         }}
                                         key={index}
                                     />
