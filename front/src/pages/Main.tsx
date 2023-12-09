@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { getCookie } from "../helpers/getCookie";
 import MainComponent from "../components/MainComponent";
 import Navbar from "../components/Navbar";
 
 function Main() {
     useEffect(() => {
-        if(!getCookie('loginToken')) {
+        if(!localStorage.getItem('isLogged')) {
             window.location.href = "/welcome"
         }
     }, [])
