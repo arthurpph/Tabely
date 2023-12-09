@@ -27,7 +27,7 @@ function DownloadedSongsModal(props: DownloadedSongsModalProps) {
 
     useEffect(() => {
         getAllDownloadedSongs();
-    }, []);
+    }, [showModal]);
 
     return (
         <Modal show={showModal} onHide={() => setShowModal(false)}>

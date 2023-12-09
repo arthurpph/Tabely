@@ -76,7 +76,9 @@ function QueueOffCanvas(props: QueueOffCanvasProps) {
                                 }}
                                 key={index}
                             />
-                            {music.name}
+                            <p>
+                                {music.name}
+                            </p>
                             <div className="musicdownload-container">
                                 <button className="musicdownload" onClick={() => downloadMusicOnIndexedDB(music.name, music.musicURL)}>
                                     <img src={DownloadIcon}/>
