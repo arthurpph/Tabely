@@ -3,8 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCookie } from '../helpers/getCookie';
 import { decodeToken } from '../helpers/decodeToken';
 import { removeCookie } from '../helpers/removeCookie';
-import '../assets/styles/Navbar.css';
 import LibraryOffCanvas from './LibraryOffCanvas';
+import '../assets/styles/Navbar.css';
 
 function Navbar() {
     const [activeTab, setActiveTab] = useState<string>('home');
@@ -56,7 +56,15 @@ function Navbar() {
                 </ul>
             </nav>
             <div className="login-info" onMouseLeave={() => setDropdownVisible(false)}>
-                {!getCookie('loginToken') ? <button className="login-button" onClick={() => navigate('/login')}>Login</button> : <p style={{ cursor: 'pointer', textDecoration: 'underline' }} onMouseEnter={() => setDropdownVisible(true)}>Logged as {capitalizeFirstLetter(decodeToken('', 'loginToken').name)}</p>}
+                {!getCookie('loginToken') ? 
+                    <button className="login-button" onClick={() => navigate('/login')}>
+                        Login
+                    </button> 
+                : 
+                <p style={{ cursor: 'pointer', textDecoration: 'underline' }} onMouseEnter={() => setDropdownVisible(true)} onClick={() => navigate(`/user?userId=${decodeToken('', 'loginToken').id}`)}>
+                    Logged as {capitalizeFirstLetter(decodeToken('', 'loginToken').name)}
+                </p>
+                }
                 {dropdownVisible && (
                     <div className="dropdown-content">
                         <button className="dropdown-content-button" onClick={handleLogout}>Log out</button>

@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import multer from 'multer';
 import 'dotenv/config';
 import { MongoDatabase } from './infra/mongoClient';
 import { UserRepository } from './endpoints/user/userRepository';
@@ -39,6 +40,9 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(morgan('dev'));
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const mongoDatabase: MongoDatabase = new MongoDatabase(process.env.DATABASE_URL);
 
@@ -81,7 +85,7 @@ app.put('/playlist', (req, res) => playlistController.updatePlaylist(req, res));
 app.put('/playlist/music', (req, res) => playlistController.addPlaylistMusic(req, res));
 app.delete('/playlist', (req, res) => playlistController.deletePlaylist(req, res));
 
-app.post('/playlist/image', (req, res) => imageController.uploadPlaylistImageToImgur(req, res));
+app.post('/playlist/image', upload.single('image'), (req, res) => imageController.uploadPlaylistImageToImgur(req, res));
 
 app.listen(8080, () => {
     console.log("Server initialized");

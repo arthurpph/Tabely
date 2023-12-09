@@ -1,0 +1,38 @@
+.user-page {
+    color: #FFFFFF;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-page button {
+    width: 6rem;
+    border-radius: 10px;
+}
+
+.user-playlists {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+}
+
+.user-playlists div {
+    display: flex;
+    gap: 20px;
+}
+
+.user-playlists div img {
+    margin-top: 5px;
+}
+
+.user-playlists div h6 {
+    width: 9rem;
+    height: 10rem;
+    border-radius: 5px;
+    background-color: #808080;
+    text-align: center;
+    cursor: pointer;
+}

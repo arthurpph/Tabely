@@ -141,3 +141,9 @@
     position: absolute;
     top: 6rem;
 }
+
+#playlist-image {
+    width: 8rem;
+    height: 7rem;
+    border-radius: 5px;
+}

@@ -121,7 +121,12 @@ function Player() {
     const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const audio = audioRef.current;
         if(audio){
-            audio.currentTime = parseFloat(e.target.value);
+            if(audio.paused) {
+                audio.currentTime = parseFloat(e.target.value);
+                audio.pause();
+            } else {
+                audio.currentTime = parseFloat(e.target.value);
+            }
         }
     }
 

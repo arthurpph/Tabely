@@ -6,15 +6,16 @@ import Main from './pages/Main';
 import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import Register from './pages/Register';
-import WelcomePage from './pages/WelcomePage';
+import WelcomePage from './pages/Welcome';
 import Playlist from './pages/Playlist';
 import Player from './components/Player';
+import User from './pages/User';
 
 export const audioDB = new connectToIndexedDB('AudioDatabase', 1);
 
 function App() {
   const currentRoute = window.location.pathname;
-  const showPlayer = ['/', '/playlist'].includes(currentRoute);
+  const showPlayer = ['/', '/playlist', '/user'].includes(currentRoute);
 
   return (
     <Router>
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main/>}/>
           <Route path="/playlist" element={<Playlist/>}/>
+          <Route path="/user" element={<User/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
           <Route path="/welcome" element={<WelcomePage/>}/>
