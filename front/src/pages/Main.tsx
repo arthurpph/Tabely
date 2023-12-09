@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 
 function Main() {
     useEffect(() => {
-        if(!localStorage.getItem('isLogged')) {
+        if(!localStorage.getItem('loginToken')) {
             window.location.href = "/welcome"
         }
     }, [])

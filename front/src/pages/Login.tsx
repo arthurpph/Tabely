@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { TailSpin } from 'react-loader-spinner';
 import { getCookie } from "../helpers/getCookie";
 import axios from 'axios';
-import cookies from 'js-cookie';
 import 'react-toastify/dist/ReactToastify.css';
 import '../assets/styles/CustomToast.css';
 import '../assets/styles/Login.css';
@@ -46,8 +45,7 @@ function Login() {
                 return;
             }
 
-            cookies.set('loginToken', data.accessToken);
-            localStorage.setItem('isLogged', 'true');
+            localStorage.setItem('loginToken', data.accessToken);
             
             toast.success(data.response);
             window.location.href = '/';

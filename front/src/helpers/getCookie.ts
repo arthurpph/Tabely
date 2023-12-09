@@ -1,5 +1,3 @@
-import cookies from 'js-cookie';
-
-export function getCookie(cookieName: string): string | undefined {
-    return cookies.get(cookieName);
+export function getCookie(cookieName: string): string | null {
+    return localStorage.getItem(cookieName);
 }

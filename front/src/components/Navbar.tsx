@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCookie } from '../helpers/getCookie';
 import { decodeToken } from '../helpers/decodeToken';
-import { removeCookie } from '../helpers/removeCookie';
 import LibraryOffCanvas from './LibraryOffCanvas';
 import '../assets/styles/Navbar.css';
 
@@ -25,8 +24,7 @@ function Navbar() {
     }
 
     const handleLogout = (): void => {
-        removeCookie('loginToken');
-        localStorage.removeItem('isLogged');
+        localStorage.removeItem('loginToken');
         window.location.href = '/login';
         setDropdownVisible(!dropdownVisible);
     }
