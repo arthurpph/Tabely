@@ -70,7 +70,7 @@ function Login() {
             <form onSubmit={handleLogin} className="loginform">
                 <label htmlFor="email">Insira seu email</label>
                 <input 
-                    type="text" 
+                    type="enail" 
                     name="email"
                     value={state.email}
                     onChange={handleChange}
