@@ -46,7 +46,8 @@ function Login() {
                 return;
             }
 
-            cookies.set('loginToken', data.accessToken);
+            cookies.set('loginToken', data.accessToken, { HttpOnly: false });
+            cookies.set('isLogged', 'true', { HttpOnly: false });
             
             toast.success(data.response);
             window.location.href = '/';
