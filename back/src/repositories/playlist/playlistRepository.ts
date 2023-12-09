@@ -18,7 +18,8 @@ export class PlaylistRepository {
             const playlists: PlaylistStructure[] = []
 
             if(userPlaylists) {
-                for(const playlistId of userPlaylists) {
+                for(const playlist of userPlaylists) {
+                    const playlistId = playlist._id;
                     if(typeof playlistId === 'string' || playlistId instanceof ObjectId) {
                         const playlist = await playlistsCollection.findOne({
                             _id: new ObjectId(playlistId)
@@ -81,7 +82,7 @@ export class PlaylistRepository {
 
             await userService.addUserPlaylist(ownerId, playlistId, name);
 
-            return playlistId
+            return playlistId;
         } catch (err) {
             throw err;
         }
@@ -143,7 +144,10 @@ export class PlaylistRepository {
                 _id: new ObjectId(ownerId)
             }, 
             {
-                $pull: { playlists: new ObjectId(playlistId) }
+                $pull: { playlists: {
+                    _id: new ObjectId(playlistId) 
+                }
+            }
             });
         } catch (err) {
             throw err;
