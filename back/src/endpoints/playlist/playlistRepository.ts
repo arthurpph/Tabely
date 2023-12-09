@@ -75,7 +75,8 @@ export class PlaylistRepository {
             const createdPlaylist = await playlistsCollection.insertOne({
                 name: name,
                 musics: [],
-                ownerId: ownerId
+                ownerId: ownerId,
+                imageURL: null
             });
 
             const playlistId: ObjectId = createdPlaylist.insertedId;

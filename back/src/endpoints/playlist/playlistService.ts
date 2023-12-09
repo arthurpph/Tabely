@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { PlaylistStructure } from "../../interfaces/playlist/playlistStructure";
-import { PlaylistRepository } from "../../repositories/playlist/playlistRepository";
+import { PlaylistRepository } from "./playlistRepository";
 import { MusicStructure } from "../../interfaces/music/musicStructure";
 
 export class PlaylistService {

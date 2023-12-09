@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { MusicService } from "../../services/music/musicService";
+import { MusicService } from "./musicService";
 import path from 'path';
 
 export class MusicController {

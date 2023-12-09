@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { User } from "../../entities/user/user";
 import { MusicStructure } from "../../interfaces/music/musicStructure";
-import { UserRepository } from "../../repositories/user/userRepository";
+import { UserRepository } from "./userRepository";
 
 export class UserService {
     constructor(readonly userRepository: UserRepository) {}

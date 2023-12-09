@@ -2,19 +2,20 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import 'dotenv/config';
-import { MongoDatabase } from './drivers/mongoClient';
-import { UserRepository } from './repositories/user/userRepository';
-import { UserService } from './services/user/userService';
-import { UserController } from './controllers/user/userController';
-import { AuthRepository } from './repositories/auth/authRepository';
-import { AuthService } from './services/auth/authService';
-import { AuthController } from './controllers/auth/authController';
-import { MusicRepository } from './repositories/music/musicRepository';
-import { MusicService } from './services/music/musicService';
-import { MusicController } from './controllers/music/musicController';
-import { PlaylistRepository } from './repositories/playlist/playlistRepository';
-import { PlaylistService } from './services/playlist/playlistService';
-import { PlaylistController } from './controllers/playlist/playlistController';
+import { MongoDatabase } from './infra/mongoClient';
+import { UserRepository } from './endpoints/user/userRepository';
+import { UserService } from './endpoints/user/userService';
+import { UserController } from './endpoints/user/userController';
+import { AuthRepository } from './endpoints/auth/authRepository';
+import { AuthService } from './endpoints/auth/authService';
+import { AuthController } from './endpoints/auth/authController';
+import { MusicRepository } from './endpoints/music/musicRepository';
+import { MusicService } from './endpoints/music/musicService';
+import { MusicController } from './endpoints/music/musicController';
+import { PlaylistRepository } from './endpoints/playlist/playlistRepository';
+import { PlaylistService } from './endpoints/playlist/playlistService';
+import { PlaylistController } from './endpoints/playlist/playlistController';
+import { ImageController } from './endpoints/image/imageController';
 
 const app: express.Application = express();
 
@@ -57,6 +58,8 @@ const playlistRepository: PlaylistRepository = new PlaylistRepository(mongoDatab
 const playlistService: PlaylistService = new PlaylistService(playlistRepository);
 const playlistController: PlaylistController = new PlaylistController(playlistService);
 
+const imageController: ImageController = new ImageController(mongoDatabase.getClient());
+
 app.get('/users', (req, res) => userController.getAllUsers(req, res));
 app.post('/users', (req, res) => userController.addUser(req, res));
 
@@ -77,6 +80,8 @@ app.post('/playlist', (req, res) => playlistController.createPlaylist(req, res))
 app.put('/playlist', (req, res) => playlistController.updatePlaylist(req, res));
 app.put('/playlist/music', (req, res) => playlistController.addPlaylistMusic(req, res));
 app.delete('/playlist', (req, res) => playlistController.deletePlaylist(req, res));
+
+app.post('/playlist/image', (req, res) => imageController.uploadPlaylistImageToImgur(req, res));
 
 app.listen(8080, () => {
     console.log("Server initialized");

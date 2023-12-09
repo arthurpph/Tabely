@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PlaylistService } from "../../services/playlist/playlistService";
+import { PlaylistService } from "./playlistService";
 
 export class PlaylistController {
     constructor(readonly playlistService: PlaylistService) {}
