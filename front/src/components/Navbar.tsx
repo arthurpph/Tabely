@@ -26,6 +26,7 @@ function Navbar() {
 
     const handleLogout = (): void => {
         removeCookie('loginToken');
+        localStorage.removeItem('isLogged');
         window.location.href = '/login';
         setDropdownVisible(!dropdownVisible);
     }
