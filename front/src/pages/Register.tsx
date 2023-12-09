@@ -103,7 +103,7 @@ function Register() {
                 <span className="error">{state.errors.name}</span>
                 <label htmlFor="email">Insira seu email</label>
                 <input 
-                    type="text" 
+                    type="email" 
                     name="email"
                     value={state.email}
                     onChange={handleChange}
