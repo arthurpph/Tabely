@@ -30,6 +30,10 @@
     border-radius: 5px;
 }
 
+.playlist-container .playlist-info img {
+    cursor: pointer;
+}
+
 .playlist-container .playlist-info .playlist-image-icon:hover > .image-icon {
     opacity: 0;
 }
@@ -134,7 +138,7 @@
 }
 
 .background-image {
-    opacity: 0.02;
+    opacity: 0.04;
     width: 100%;
     height: 100%;
     z-index: 0;

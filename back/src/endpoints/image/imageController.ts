@@ -27,7 +27,18 @@ export class ImageController {
                 $set: {
                     imageURL: imageUploadLink
                 }
-            })
+            });
+
+            const usersCollection = db.collection('users');
+
+            await usersCollection.updateOne({
+                "playlists._id": new ObjectId(playlistId)
+            },
+            {
+                $set: {
+                    "playlists.$.imageURL": imageUploadLink
+                }
+            });
 
             res.json(imageUploadLink);
         } catch (err) {

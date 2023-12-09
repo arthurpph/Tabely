@@ -118,7 +118,14 @@ function Playlist() {
                                 </button>
                             :
                             <>
-                                <img src={playlistImageURL} alt="Playlist Image" id="playlist-image"/>
+                                <img src={playlistImageURL} alt="Playlist Image" id="playlist-image" onClick={handleChangeImageClick}/>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    style={{ display: 'none' }}
+                                    onChange={handleFileSubmit}
+                                    accept="image/*"
+                                />
                             </>
                             }
                             <div className="playlist-info-name">

@@ -27,6 +27,12 @@
     gap: 15px;
 }
 
+.library-offcanvas .playlist img {
+    width: 4rem;
+    height: 3.5rem;
+    border-radius: 5px;
+}
+
 .library-offcanvas .playlist button {
     width: 4rem;
     height: 3.5rem;
@@ -50,9 +56,18 @@
 .library-offcanvas .create-new-playlist {
     width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: end;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
     margin-bottom: 10px;
+    gap: 20px;
+}
+
+.library-offcanvas .create-new-playlist .downloaded-songs-button {
+    width: 12rem;
+    height: 3rem;
+    border-radius: 10px;
+    background-color: #62d32e;
 }
 
 .library-offcanvas .create-new-playlist-button {

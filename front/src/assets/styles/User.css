@@ -19,20 +19,40 @@
     margin-top: 60px;
 }
 
+.user-playlists h5 {
+    margin-bottom: 20px;
+}
+
 .user-playlists div {
     display: flex;
     gap: 20px;
 }
 
-.user-playlists div img {
-    margin-top: 5px;
-}
-
-.user-playlists div h6 {
+.user-playlists div .playlist {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 9rem;
     height: 10rem;
     border-radius: 5px;
-    background-color: #808080;
-    text-align: center;
+    background-color: #131212;
     cursor: pointer;
+}
+
+.user-playlists div .playlist img {
+    width: 6rem;
+    height: 5.5rem;
+    border-radius: 5px;
+}
+
+.user-playlists div .playlist button {
+    width: 6rem;
+    height: 5.5rem;
+    background-color: #808080;
+    border-radius: 5px;
+}
+
+.user-playlists div .playlist button svg {
+    width: 3rem;
 }

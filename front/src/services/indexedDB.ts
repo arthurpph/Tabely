@@ -83,4 +83,50 @@ export class connectToIndexedDB {
             }
         })
     }
+
+    getAllKeys(): Promise<string[]> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const db = await this.connect();
+                const transaction = db.transaction(['audio'], 'readonly');
+                const objectStore = transaction.objectStore('audio');
+
+                const getAllKeysRequest = objectStore.getAllKeys();
+
+                getAllKeysRequest.onsuccess = (e) => {
+                    const keys = (e.target as any).result;
+                    resolve(keys);
+                };
+
+                getAllKeysRequest.onerror = (err) => {
+                    reject(`Error while getting all keys: ${err}`);
+                };
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    deleteKey(key: string): Promise<void> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const db = await this.connect();
+                const transaction = db.transaction(['audio'], 'readwrite');
+                const objectStore = transaction.objectStore('audio');
+
+                const deleteRequest = objectStore.delete(key);
+
+                deleteRequest.onsuccess = () => {
+                    resolve();
+                    toast.success(`Música ${key} excluída com sucesso`);
+                };
+
+                deleteRequest.onerror = (err) => {
+                    reject(`Error while deleting key: ${err}`);
+                };
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
 }

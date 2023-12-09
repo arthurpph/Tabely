@@ -122,7 +122,8 @@ export class UserRepository implements UserInterface {
                 $push: {
                     playlists: {
                         _id: playlistId,
-                        name: name
+                        name: name,
+                        imageURL: null
                     }
                 }
             });

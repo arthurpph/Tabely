@@ -7,10 +7,9 @@ import axios from 'axios';
 import '../assets/styles/User.css';
 
 function User() {
-    //const [userImage, setUserImage] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
     const [userPlaylistsCounter, setUserPlaylistsCounter] = useState<number>(0);
-    const [userPlaylists, setUserPlaylists] = useState<{ _id: string, name: string }[]>([]);
+    const [userPlaylists, setUserPlaylists] = useState<{ _id: string, name: string, imageURL: string }[]>([]);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -30,7 +29,8 @@ function User() {
             setUserPlaylistsCounter(data.playlists.length);
             setUserPlaylists(data.playlists.map((playlist: PlaylistStructure) => ({
                 _id: playlist._id,
-                name: playlist.name
+                name: playlist.name,
+                imageURL: playlist.imageURL
             })));
             setIsLoaded(true);
         }
@@ -50,7 +50,16 @@ function User() {
                             <h5>Playlists</h5>
                             <div>
                                 {userPlaylists.map((playlist, index) => (
-                                    <h6 key={index} onClick={() => navigate(`/playlist?playlistId=${playlist._id}`)}>{playlist.name}</h6>
+                                    <div className='playlist' key={index} onClick={() => navigate(`/playlist?playlistId=${playlist._id}`)}>
+                                        {playlist.imageURL ? 
+                                            <img src={playlist.imageURL} alt="Playlist Image" />
+                                        :
+                                            <button>
+                                                <svg data-encore-id="icon" role="img" aria-hidden="true" data-testid="playlist" viewBox="0 0 24 24" className="Svg-sc-ytk21e-0 iYxpxA" fill="black"><path d="M6 3h15v15.167a3.5 3.5 0 1 1-3.5-3.5H19V5H8v13.167a3.5 3.5 0 1 1-3.5-3.5H6V3zm0 13.667H4.5a1.5 1.5 0 1 0 1.5 1.5v-1.5zm13 0h-1.5a1.5 1.5 0 1 0 1.5 1.5v-1.5z"></path></svg>
+                                            </button>
+                                        }
+                                        <h6>{playlist.name}</h6>
+                                    </div>
                                 ))}
                             </div>
                         </div>

@@ -38,7 +38,8 @@ function ModalComponent(props: ModalProps) {
                 name: inputValue,
                 ownerId: decodeToken('', 'loginToken').id
             });
-            navigate(`/playlist?playlistId=${response.data.playlistId}`)
+            navigate('/');
+            setTimeout(() => navigate(`/playlist?playlistId=${response.data.playlistId}`), 1);
         } catch (err) {
             console.error(err);
         } finally {

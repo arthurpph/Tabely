@@ -5,4 +5,5 @@ export interface PlaylistStructure {
     name: string;
     musics: MusicStructure[];
     ownerId: string;
+    imageURL: string;
 }
