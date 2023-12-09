@@ -49,9 +49,9 @@ export class UserService {
         }
     }
 
-    async addUserPlaylist(userId: number, playlistId: ObjectId) {
+    async addUserPlaylist(userId: number, playlistId: ObjectId, name: string) {
         try {
-            await this.userRepository.addUserPlaylist(userId, playlistId);
+            await this.userRepository.addUserPlaylist(userId, playlistId, name);
         } catch (err) {
             throw err;
         }

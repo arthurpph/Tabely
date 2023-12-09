@@ -79,7 +79,7 @@ export class PlaylistRepository {
 
             const playlistId: ObjectId = createdPlaylist.insertedId;
 
-            await userService.addUserPlaylist(ownerId, playlistId);
+            await userService.addUserPlaylist(ownerId, playlistId, name);
 
             return playlistId
         } catch (err) {

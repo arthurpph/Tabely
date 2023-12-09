@@ -110,7 +110,7 @@ export class UserRepository implements UserInterface {
         }
     }
 
-    async addUserPlaylist(userId: number, playlistId: ObjectId): Promise<void> {
+    async addUserPlaylist(userId: number, playlistId: ObjectId, name: string): Promise<void> {
         try {
             const db = this.client.db();
             const usersCollection = db.collection('users');
@@ -120,7 +120,10 @@ export class UserRepository implements UserInterface {
             },
             {
                 $push: {
-                    playlists: playlistId
+                    playlists: {
+                        _id: playlistId,
+                        name: name
+                    }
                 }
             });
         } catch (err) {
