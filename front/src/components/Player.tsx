@@ -237,11 +237,14 @@ function Player() {
         setMusicDuration(music.duration);
         setPlayImageButton(PauseButton);
         if(!firstMusicSetup) {
-            if(audio?.paused) {
-                setTimeout(() => {
-                    audio?.play();
-                }, 500);
-            }
+            setTimeout(() => {
+                if(audio?.paused) {
+                    setTimeout(() => {
+                        audio?.play();
+                    }, 500);
+                }
+            }, 500);
+            
             audio?.addEventListener('canplaythrough', () => {
                 audio.play();
             });
