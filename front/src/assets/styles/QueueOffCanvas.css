@@ -27,6 +27,11 @@
     align-items: center;
 }
 
+.reproductionicon-container {
+    position: relative;
+    bottom: 0.5rem;
+}
+
 .offcanvas-body .queue-container div p {
     width: 40%;
     position: relative;

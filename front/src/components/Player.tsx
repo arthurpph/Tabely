@@ -241,9 +241,9 @@ function Player() {
                 if(audio?.paused) {
                     setTimeout(() => {
                         audio?.play();
-                    }, 500);
+                    }, 100);
                 }
-            }, 500);
+            }, 100);
             
             audio?.addEventListener('canplaythrough', () => {
                 audio.play();

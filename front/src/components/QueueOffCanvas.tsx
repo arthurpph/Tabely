@@ -52,30 +52,34 @@ function QueueOffCanvas(props: QueueOffCanvasProps) {
                     {queue.map((music, index) => (
                         <div key={index}>
                             {index + 1}
-                            <img
-                                src={music.imageURL} 
-                                alt={`Music Image ${index}`}
-                                style={{ opacity: highlightedIndex === index ? 0.2 : 1, transition: 'opacity 0.4s ease' }} 
-                                onMouseEnter={() => reproductionIconMouseEnter(index)} 
-                                onMouseLeave={() => reproductionIconMouseLeave()}
-                                onClick={() => {
-                                    setMusic(music);
-                                    changeQueue(index + 1);
-                                }} 
-                            />
-                            <FontAwesomeIcon 
-                                icon={faPlay} 
-                                size="2x" 
-                                style={{ opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease' }}
-                                className='reproductioniconqueue'
-                                onMouseEnter={() => reproductionIconMouseEnter(index)} 
-                                onMouseLeave={() => reproductionIconMouseLeave()}
-                                onClick={() => {
-                                    setMusic(music);
-                                    changeQueue(index + 1);
-                                }}
-                                key={index}
-                            />
+                            <div className='queue-container-image'>
+                                <img
+                                    src={music.imageURL} 
+                                    alt={`Music Image ${index}`}
+                                    style={{ opacity: highlightedIndex === index ? 0.2 : 1, transition: 'opacity 0.4s ease' }} 
+                                    onMouseEnter={() => reproductionIconMouseEnter(index)} 
+                                    onMouseLeave={() => reproductionIconMouseLeave()}
+                                    onClick={() => {
+                                        setMusic(music);
+                                        changeQueue(index + 1);
+                                    }}
+                                />
+                                <div className='reproductionicon-container'>
+                                    <FontAwesomeIcon 
+                                        icon={faPlay} 
+                                        size="2x" 
+                                        style={{ opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease' }}
+                                        className='reproductioniconqueue'
+                                        onMouseEnter={() => reproductionIconMouseEnter(index)} 
+                                        onMouseLeave={() => reproductionIconMouseLeave()}
+                                        onClick={() => {
+                                            setMusic(music);
+                                            changeQueue(index + 1);
+                                        }}
+                                        key={index}
+                                    />
+                                </div>
+                            </div>
                             <p>
                                 {music.name}
                             </p>

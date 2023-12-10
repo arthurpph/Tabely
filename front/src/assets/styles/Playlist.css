@@ -3,16 +3,16 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    position: relative;
     height: 50vh;
     color: #FFFFFF;
     gap: 40px;
     z-index: 1;
+    position: relative;
 }
 
 .playlist-container #add-music-button {
     width: 10rem;
-    height: 2.5rem;
+    min-height: 2.5rem;
     border-radius: 15px;
     background-color: #030303;
     color: #FFFFFF;
