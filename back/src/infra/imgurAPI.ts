@@ -2,7 +2,7 @@ import axios from "axios";
 
 export async function uploadToImgur(image: Buffer) {
     if(!process.env.IMGUR_ACCESS_TOKEN) {
-        return 'IMGUR_ACCESS_TOKEN environment variable undefined';
+        throw new Error('IMGUR_ACCESS_TOKEN environment variable undefined');
     }
 
 

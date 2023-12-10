@@ -66,7 +66,7 @@ function QueueOffCanvas(props: QueueOffCanvasProps) {
                             <FontAwesomeIcon 
                                 icon={faPlay} 
                                 size="2x" 
-                                style={{ position: 'relative', bottom: '5rem', opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease' }}
+                                style={{ opacity: highlightedIndex === index ? 1 : 0, transition: 'opacity 0.4s ease' }}
                                 className='reproductioniconqueue'
                                 onMouseEnter={() => reproductionIconMouseEnter(index)} 
                                 onMouseLeave={() => reproductionIconMouseLeave()}
