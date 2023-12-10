@@ -237,6 +237,7 @@ function Player() {
         setMusicDuration(music.duration);
         setPlayImageButton(PauseButton);
         if(!firstMusicSetup) {
+            audio?.play();
             audio?.addEventListener('canplaythrough', () => {
                 audio.play();
             });
