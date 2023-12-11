@@ -370,7 +370,7 @@ function Player() {
                 title: musicName || 'Unknown Music',
                 artist: musicArtist || 'Unknown Artist',
                 artwork: [
-                    { src: musicImage, sizes: '96x96 192x192 256x256 384x384 512x512', type: 'image/jpeg' },
+                    { src: musicImage, sizes: '96x96 192x192 256x256 384x384 512x512 1200x1200 2400x2400', type: 'image/jpeg' },
                 ],
             });
 
