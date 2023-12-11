@@ -72,6 +72,8 @@ app.get('/user/:userId', (req, res) => userController.getUserById(req, res));
 app.put('/user/playlist', (req, res) => userController.addUserPlaylist(req, res));
 
 app.put('/music/user/:id', (req, res) => userController.changeUserCurrentMusic(req, res));
+app.put('/music/user/time/:time', (req, res) => userController.changeUserCurrentTime(req, res));
+
 app.get('/music/:musicname', (req, res) => musicController.getMusic(req, res));
 app.get('/musics', (req, res) => musicController.getMusics(req, res));
 

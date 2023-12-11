@@ -38,6 +38,7 @@ export class UserRepository implements UserInterface {
                     email: user.email,
                     password: user.password,
                     currentMusic: user.currentMusic,
+                    currentTime: user.currentTime,
                     playlists: user.playlists
                 };
             }
@@ -103,6 +104,24 @@ export class UserRepository implements UserInterface {
             { 
                 $set: {
                     currentMusic: music
+                }
+            });
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async changeUserCurrentTime(userId: string, time: number): Promise<void> {
+        try {
+            const db = this.client.db();
+            const usersCollection = db.collection('users');
+
+            await usersCollection.updateOne({
+                _id: new ObjectId(userId)
+            },
+            {
+                $set: {
+                    currentTime: time
                 }
             });
         } catch (err) {

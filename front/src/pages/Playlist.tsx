@@ -26,6 +26,7 @@ function Playlist() {
     const [showUpdatePlaylistModel, setShowUpdatePlaylistModel] = useState<boolean>(false);
     const [showSearchMusicModel, setShowSearchMusicModel] = useState<boolean>(false);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const navigate = useNavigate();
 
@@ -94,7 +95,17 @@ function Playlist() {
     }
 
     useEffect(() => {
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+      
+        window.addEventListener('resize', handleResize);
+
         getPlaylistInfo();
+      
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, [])
 
     return (
@@ -117,21 +128,24 @@ function Playlist() {
                                     />
                                 </button>
                             :
-                            <>
-                                <img src={playlistImageURL} alt="Playlist Image" id="playlist-image" onClick={handleChangeImageClick}/>
-                                <input
-                                    type="file"
-                                    ref={fileInputRef}
-                                    style={{ display: 'none' }}
-                                    onChange={handleFileSubmit}
-                                    accept="image/*"
-                                />
-                            </>
+                                <>
+                                    <img src={playlistImageURL} alt="Playlist Image" id="playlist-image" onClick={handleChangeImageClick}/>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        style={{ display: 'none' }}
+                                        onChange={handleFileSubmit}
+                                        accept="image/*"
+                                    />
+                                </>
                             }
                             <div className="playlist-info-name">
-                                <p className="playlist-info-playlist-name" style={{ cursor: 'pointer' }} onContextMenu={handleContextMenu} onClick={() => setShowUpdatePlaylistModel(true)}>{playlistName}</p>
+                                <div>
+                                    <p className="playlist-info-playlist-name" style={{ cursor: 'pointer' }} onContextMenu={handleContextMenu} onClick={() => setShowUpdatePlaylistModel(true)}>{playlistName}</p>
+                                    {windowWidth <= 600 && <svg onClick={deletePlaylist} fill="#000000" version="1.1" id="Capa_1" className="trash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408.483 408.483"><g id="SVGRepo_bgCarrier"></g><g id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M87.748,388.784c0.461,11.01,9.521,19.699,20.539,19.699h191.911c11.018,0,20.078-8.689,20.539-19.699l13.705-289.316 H74.043L87.748,388.784z M247.655,171.329c0-4.61,3.738-8.349,8.35-8.349h13.355c4.609,0,8.35,3.738,8.35,8.349v165.293 c0,4.611-3.738,8.349-8.35,8.349h-13.355c-4.61,0-8.35-3.736-8.35-8.349V171.329z M189.216,171.329 c0-4.61,3.738-8.349,8.349-8.349h13.355c4.609,0,8.349,3.738,8.349,8.349v165.293c0,4.611-3.737,8.349-8.349,8.349h-13.355 c-4.61,0-8.349-3.736-8.349-8.349V171.329L189.216,171.329z M130.775,171.329c0-4.61,3.738-8.349,8.349-8.349h13.356 c4.61,0,8.349,3.738,8.349,8.349v165.293c0,4.611-3.738,8.349-8.349,8.349h-13.356c-4.61,0-8.349-3.736-8.349-8.349V171.329z"></path> <path d="M343.567,21.043h-88.535V4.305c0-2.377-1.927-4.305-4.305-4.305h-92.971c-2.377,0-4.304,1.928-4.304,4.305v16.737H64.916 c-7.125,0-12.9,5.776-12.9,12.901V74.47h304.451V33.944C356.467,26.819,350.692,21.043,343.567,21.043z"></path> </g> </g> </g></svg>}
+                                </div>
                                 <CustomMenu contextMenuVisible={contextMenuVisible} contextMenuPosition={contextMenuPosition} menuItems={[{ text: 'Delete Playlist', function: deletePlaylist }]}/>
-                                <button onClick={() => navigate(`/user?userId=${playlistOwnerId}`)}><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
+                                <button className="playlist-info-owner-name-button" onClick={() => navigate(`/user?userId=${playlistOwnerId}`)}><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
                             </div>
                         </div>
                         <button id="add-music-button" onClick={() => setShowSearchMusicModel(true)}>Add Music</button>

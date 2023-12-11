@@ -298,6 +298,26 @@ function Player() {
     }, []);
 
     useEffect(() => {
+        const handleBeforeUnload = () => {
+            const saveMusicTime = async () => {
+                if(audioRef.current) {
+                    await axios.put(`${import.meta.env.VITE_API_URL}/music/user/time/${audioRef.current.currentTime}`, {
+                        userId: decodeToken('', 'loginToken').id
+                    });
+                }
+            };
+        
+            saveMusicTime();
+          };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        }
+    }, [currentTime]);
+
+    useEffect(() => {
         const queueUseEffect = async (): Promise<void> => {
             const audio = audioRef.current;
             if(audio && queue.length > 0){
@@ -311,6 +331,10 @@ function Player() {
                         if(user.currentMusic) {
                             changeMusic(user.currentMusic);
                             setPlayImageButton(playButton);
+                       
+                            if(user.currentTime) {
+                                setTimeout(() => setCurrentTime(user.currentTime), 1)
+                            }
                         } else {
                             goToNextMusic();
                         }
@@ -325,7 +349,7 @@ function Player() {
         }
 
         queueUseEffect();
-    }, [queue]);
+    }, [queue, currentTime]);
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);

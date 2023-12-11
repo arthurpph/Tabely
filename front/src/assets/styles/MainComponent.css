@@ -32,8 +32,18 @@
     align-items: flex-start;
     gap: 15px;
     max-width: 80rem;
-    overflow: scroll;
+    overflow: auto;
+    scrollbar-width: thin;
     width: 100%;
+}
+
+.musicsdisplay::-webkit-scrollbar {
+    height: 3px;
+    background-color: #050505;
+}
+
+.musicsdisplay::-webkit-scrollbar-thumb {
+    background-color: #808080;
 }
 
 .music {

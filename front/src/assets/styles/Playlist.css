@@ -73,6 +73,11 @@
     margin-left: 25px;
 }
 
+.playlist-container .playlist-info .playlist-info-name div {
+    display: flex;
+    gap: 1rem;
+}
+
 .playlist-container .playlist-info .playlist-info-name .playlist-info-playlist-name {
     font-size: 35px;
     font-weight: 600;
@@ -91,6 +96,7 @@
 
 .playlist-container .musics-container {
     width: 80%;
+    min-height: 30vh;
     height: auto;
     max-height: 40vh;
     border: 2px solid black;
@@ -133,6 +139,8 @@
 }
 
 .playlist-container .musics-container div div span {
+    width: 95%;
+    text-align: left;
     font-size: 12px;
     color: #808080;
 }
@@ -146,8 +154,21 @@
     top: 6rem;
 }
 
+
 #playlist-image {
     width: 8rem;
     height: 7rem;
     border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+    .playlist-info-owner-name-button {
+        width: 75%;
+        text-align: left;
+    }
+
+    .playlist-container .musics-container {
+        overflow: auto;
+        min-height: 40vh;
+    }
 }

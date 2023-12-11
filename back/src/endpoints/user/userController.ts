@@ -55,9 +55,20 @@ export class UserController {
             const id = req.params.id;
             const music = req.body.music;
             await this.userService.changeUserCurrentMusic(id, music);
-            res.json(`Usuário atualizado com sucesso`);
+            res.json(`User successfully updated`);
         } catch (err) {
-            res.status(500).json({ error: 'Error while updating user', description: err });
+            res.status(500).json({ error: 'Error while updating user current music', description: err });
+        }
+    }
+
+    async changeUserCurrentTime(req: Request, res: Response) {
+        try {
+            const { userId } = req.body;
+            const time = req.params.time;
+            await this.userService.changeUserCurrentTime(userId, parseInt(time));
+            res.json(`User successfully updated`)
+        } catch (err) {
+            res.status(500).json({ error: 'Error while updating user current time', description: err });
         }
     }
 

@@ -49,6 +49,14 @@ export class UserService {
         }
     }
 
+    async changeUserCurrentTime(userId: string, time: number): Promise<void> {
+        try {
+            await this.userRepository.changeUserCurrentTime(userId, time);
+        } catch (err) {
+            throw err;
+        }
+    }
+
     async addUserPlaylist(userId: number, playlistId: ObjectId, name: string) {
         try {
             await this.userRepository.addUserPlaylist(userId, playlistId, name);
