@@ -17,10 +17,6 @@
     margin-right: 15rem;
 }
 
-.playerinfo audio {
-    width: 10rem;
-}
-
 .playerinfo #musictimerange {
     -webkit-appearance: none;
     appearance: none;
@@ -148,4 +144,53 @@
 
 .unloaded {
     display: none;
+}
+
+@media screen and (max-width: 600px){
+    .player {
+        justify-content: unset;
+        height: 25vh;
+    }
+
+    .playerinfo #musictimerange {
+        width: 5rem;
+    }
+
+    .playercommands {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-right: 0rem;
+    }
+
+    .musicinteraction {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .alternativecommands {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .musicphoto {
+        margin-left: 0rem;
+    }
+
+    .musicname {
+        margin-right: 0rem;
+        margin-left: 5px;
+    }
+
+    .volumecommand {
+        display: none;
+    }
+
+    .queue-button {
+        position: absolute;
+        bottom: 10px;
+        left: 15rem;
+    }
 }
