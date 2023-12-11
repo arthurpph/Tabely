@@ -203,10 +203,7 @@ function Playlist() {
                                 />
                             </div> 
                         }
-                        
                     </>
-                    
-                      
                 }
 
             {playlistImageURL && 

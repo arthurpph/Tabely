@@ -87,7 +87,7 @@ function SearchMusicModal(props: SearchMusicModalProps) {
                                 color="black"
                                 ariaLabel="tail-spin-loading"
                                 radius="1"
-                                wrapperStyle={{ position: 'absolute', left: '12px' }}
+                                wrapperStyle={{ position: 'absolute', left: '-27px' }}
                                 wrapperClass=""
                                 visible={loadingIndex === index}
                             />

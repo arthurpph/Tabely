@@ -79,6 +79,7 @@
 }
 
 .playlist-container .playlist-info .playlist-info-name .playlist-info-playlist-name {
+    text-align: center;
     font-size: 35px;
     font-weight: 600;
 }
@@ -93,14 +94,13 @@
     color: #FFFFFF;
 }
 
-
 .playlist-container .musics-container {
     width: 80%;
     min-height: 30vh;
     height: auto;
     max-height: 40vh;
     border: 2px solid black;
-    border-radius: 5px;
+    border-radius: 15px;
     padding: 20px;
     overflow: auto;
 }
@@ -138,9 +138,15 @@
     margin-left: 10px;
 }
 
-.playlist-container .musics-container div div span {
-    width: 95%;
+.playlist-container .musics-container div div p {
+    width: 100%;
     text-align: left;
+}
+
+.playlist-container .musics-container div div span {
+    width: 100%;
+    text-align: left;
+    word-break: break-all;
     font-size: 12px;
     color: #808080;
 }
@@ -153,7 +159,6 @@
     position: absolute;
     top: 6rem;
 }
-
 
 #playlist-image {
     width: 8rem;
@@ -170,5 +175,28 @@
     .playlist-container .musics-container {
         overflow: auto;
         min-height: 40vh;
+        border-radius: 5px;
+    }
+
+    .trash-icon {
+        width: 2rem;
+    }
+}
+
+@media screen and (max-height: 800px) {
+    .playlist-container .musics-container {
+        min-height: 30vh;
+    }
+}
+
+@media screen and (max-height: 735px) {
+    .playlist-container .musics-container {
+        min-height: 20vh;
+    }
+}
+
+@media screen and (max-height: 680px) {
+    .playlist-container .musics-container {
+        min-height: 10vh;
     }
 }
