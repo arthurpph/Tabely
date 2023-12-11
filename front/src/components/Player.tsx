@@ -25,6 +25,7 @@ function Player() {
     const [currentTime, setCurrentTime] = useState<number>(0);
     const [currentVolume, setCurrentVolume] = useState<number>(0);
     const [musicName, setMusicName] = useState<string>('');
+    const [musicArtist, setMusicArtist] = useState<string>('');
     const [musicDuration, setMusicDuration] = useState<string>('');
     const [musicImage, setMusicImage] = useState<string>('');
     const [firstMusicSetup, setFirstMusicSetup] = useState<boolean>(true);
@@ -196,7 +197,12 @@ function Player() {
         if(event.key === 'MediaTrackPrevious') {
             goToPreviousMusic();
             return;
-        } 
+        }
+
+        if(event.key === 'MediaPlayPause') {
+            handlePlayPause();
+            return;
+        }
         
         if(event.key === 'MediaTrackNext') {
             goToNextMusic();
@@ -233,6 +239,7 @@ function Player() {
         changeAccountCurrentMusic(music);
         changeAudioSrc(music.name, music.musicURL);
         setMusicName(music.name);
+        setMusicArtist(music.artist);
         setMusicImage(music.imageURL);
         setMusicDuration(music.duration);
         setPlayImageButton(PauseButton);
@@ -297,7 +304,7 @@ function Player() {
         componentBuild();
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         const handleBeforeUnload = () => {
             const saveMusicTime = async () => {
                 if(audioRef.current) {
@@ -315,7 +322,7 @@ function Player() {
         return () => {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         }
-    }, [currentTime]);
+    }, [currentTime]);*/
 
     useEffect(() => {
         const queueUseEffect = async (): Promise<void> => {
@@ -332,9 +339,9 @@ function Player() {
                             changeMusic(user.currentMusic);
                             setPlayImageButton(playButton);
                        
-                            if(user.currentTime) {
+                            /*if(user.currentTime) {
                                 setTimeout(() => setCurrentTime(user.currentTime), 1)
-                            }
+                            }*/
                         } else {
                             goToNextMusic();
                         }
@@ -349,15 +356,42 @@ function Player() {
         }
 
         queueUseEffect();
-    }, [queue, currentTime]);
 
-    useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         }
     }, [queue, currentTime]);
+
+    useEffect(() => {
+        if('mediaSession' in navigator) {
+            navigator.mediaSession.metadata = new window.MediaMetadata({
+                title: musicName || 'Unknown Music',
+                artist: musicArtist || 'Unknown Artist',
+                artwork: [
+                    { src: musicImage, sizes: '96x96', type: 'image/jpeg' },
+                ],
+            });
+
+            navigator.mediaSession.setActionHandler('play', function () {
+                handlePlayPause();
+            });
+
+            navigator.mediaSession.setActionHandler('pause', function () {
+                handlePlayPause();
+            });
+
+            navigator.mediaSession.setActionHandler('nexttrack', function () {
+                goToNextMusic();
+            });
+
+            navigator.mediaSession.setActionHandler('previoustrack', function () {
+                goToPreviousMusic();
+            });
+        }
+
+    }, [musicName, musicArtist, musicImage])
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -366,7 +400,7 @@ function Player() {
             <div className="playerinfo">
                 <div className='playercommands'>
                     <button onClick={goToPreviousMusic}><img src={PreviousTrack} id='musiccontrollerbutton' alt="previousTrackButton"/></button>
-                    <button onClick={handlePlayPause}><img src={playButtonImage} alt="playButton"/></button>
+                    <button onClick={handlePlayPause}><img src={playButtonImage} alt="playButton" className='play-button'/></button>
                     <button onClick={goToNextMusic}><img src={NextTrack} id='musiccontrollerbutton' alt="nextTrackButton"/></button>
                 </div>
                 <audio ref={audioRef} preload="metadata">
