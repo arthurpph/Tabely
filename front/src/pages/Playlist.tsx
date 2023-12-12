@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { MusicStructure } from "../interfaces/musicStructure";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLaptopFile, faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 import { addMusicToQueue, setMusic } from "../components/Player";
 import { audioDB } from "../App";
