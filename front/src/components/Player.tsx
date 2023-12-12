@@ -61,7 +61,7 @@ function Player() {
 
         setCurrentPlaylist(playlistName ? playlistName : null);
 
-        if(buildQueueMusics) {
+        if(buildQueueMusics && customQueue.length === 0) {
             buildQueue(buildQueueMusics);
         }
     }
@@ -104,9 +104,8 @@ function Player() {
     }
 
     const changeQueue = (index: number): void => {
-        setTimeout(() => {
-            setQueue(queue.slice(index));
-        }, 500);
+        setQueue(queue.slice(index));
+        setCustomQueue(customQueue.slice(index));
     }
 
     const handlePlayPause = (): void => {
@@ -292,6 +291,13 @@ function Player() {
         e.currentTarget?.classList.remove('unloaded');
     }
 
+    const handleImageError = () => {
+        setIsMusicImageLoaded(false);
+        setTimeout(() => {
+            setIsMusicImageLoaded(true);
+        }, 1000);
+    }
+
     useEffect(() => {
         const componentBuild = async () => {
             const audio = audioRef.current;
@@ -412,7 +418,7 @@ function Player() {
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>
-            <img src={musicImage} alt="musicImage" className="musicphoto unloaded" onLoad={handleImageLoad}/>
+            <img src={musicImage} alt="musicImage" className="musicphoto unloaded" onLoad={handleImageLoad} onError={handleImageError} />
             {isMusicImageLoadad ? <p className='musicname'>{musicName}</p> : <p className='musicnameloading'>Loading...</p>}
             <div className="playerinfo">
                 <div className='playercommands'>
