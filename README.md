@@ -1,2 +1,5 @@
 # Tabely
-trying to do a fully functional music website
+
+https://tabely.netlify.app
+
+fully functional music website
