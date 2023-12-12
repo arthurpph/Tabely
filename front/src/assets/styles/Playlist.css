@@ -188,6 +188,10 @@
     top: 6rem;
 }
 
+.downloading-spin svg {
+    width: 50px;
+}
+
 #playlist-image {
     width: 8rem;
     height: 7rem;

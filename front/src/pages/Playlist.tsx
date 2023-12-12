@@ -18,6 +18,7 @@ import "../assets/styles/Playlist.css"
 function Playlist() {
     const [IsPlaylistLoaded, setIsPlaylistLoaded] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
+    const [isDownloading, setIsDownloading] = useState<boolean>(false);
     const [playlistId, setPlaylistId] = useState<string | null>('');
     const [playlistName, setPlaylistName] = useState<string>('');
     const [playlistOwnerName, setPlaylistOwnerName] = useState<string>('');
@@ -87,19 +88,29 @@ function Playlist() {
 
             window.location.href = `/playlist?playlistId=${playlistId}`;
         }
+
         setIsPlaylistLoaded(true);
     }
 
-    const downloadPlaylistMusics = () => {
-        playlistMusics.forEach(async (music, index) => {
-            const response = await axios.get(music.musicURL, { responseType: 'blob' });
-            if(response) {
-                await audioDB.addData(music.name, response.data);
-                const temp = [...musicsDownloaded];
-                temp[index] = true;
-                setMusicsDownloaded(temp);
-            }
-        });
+    const downloadPlaylistMusics = async () => {
+        setIsDownloading(true);
+
+        try {
+            const downloadPromises = playlistMusics.map(async (music) => {
+                const response = await axios.get(music.musicURL, { responseType: 'blob' });
+                if (response) {
+                    await audioDB.addData(music.name, response.data);
+                }
+            });
+
+            await Promise.all(downloadPromises);
+        } catch (error) {
+            console.error('Erro durante o download:', error);
+        } finally {
+            setIsDownloading(false);
+            navigate('/aa');
+            setTimeout(() => navigate(`/playlist?playlistId=${playlistId}`))
+        }
     }
 
     const getPlaylistInfo = async (): Promise<void> => {
@@ -144,15 +155,18 @@ function Playlist() {
     }, []);
 
     useEffect(() => {
-        const temp = [...musicsDownloaded];
-        playlistMusics.forEach(async (music, index) => {
-            const response = await audioDB.checkIfKeyExists(music.name);
-            if(response) {
-                temp[index] = true;
+        const updateDownloadedStatus = async () => {
+            const temp = [...musicsDownloaded];
+        
+            for(let [index, music] of playlistMusics.entries()) {
+                const response = await audioDB.checkIfKeyExists(music.name);
+                temp[index] = !!response; 
             }
-        });
-
-        setMusicsDownloaded(temp);
+        
+            setMusicsDownloaded(temp);
+        };
+        
+        updateDownloadedStatus();
     }, [playlistMusics]);
 
     return (
@@ -200,12 +214,24 @@ function Playlist() {
                                 </div>
                                 <CustomMenu contextMenuVisible={deletePlaylistContextMenuVisible} contextMenuPosition={deletePlaylistContextMenuPosition} menuItems={[{ text: 'Delete Playlist', function: deletePlaylist }]}/>
                                 <button className="playlist-info-owner-name-button" onClick={() => navigate(`/user?userId=${playlistOwnerId}`)}><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
-                                {musicsDownloaded.every(boolean => boolean === true) ?
+                                {musicsDownloaded.every(boolean => boolean) ?
                                     <svg style={{ width: '2rem' }} className="playlist-downloaded" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"></g><g id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path d="M31.667 45.024V18.024" stroke="#426AB2"></path> <path d="M22.667 39.024L31.667 45.024L40.666 39.024" stroke="#426AB2"></path> <path d="M31.667 58.191C46.3948 58.191 58.334 46.2518 58.334 31.5241C58.334 16.7963 46.3948 4.85706 31.667 4.85706C16.9392 4.85706 5 16.7963 5 31.5241C5 46.2518 16.9392 58.191 31.667 58.191Z" stroke="#000000"></path> </g></svg>
                                 :
-                                    <button className="musicdownload" onClick={downloadPlaylistMusics}>
-                                        <img src={DownloadIcon}/>
-                                    </button>
+                                    <>
+                                        <TailSpin
+                                            height="80"
+                                            width="80"
+                                            color="#808080"
+                                            ariaLabel="tail-spin-loading"
+                                            radius="1"
+                                            wrapperStyle={{}}
+                                            wrapperClass="downloading-spin"
+                                            visible={isDownloading}
+                                        />
+                                        <button className="musicdownload" onClick={downloadPlaylistMusics} style={{ display: isDownloading ? 'none' : '' }}>
+                                            <img src={DownloadIcon}/>
+                                        </button> 
+                                    </>                            
                                 }
                             </div>
                         </div>

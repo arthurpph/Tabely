@@ -36,9 +36,15 @@
 }
 
 .offcanvas-body .queue-container div p {
+    display: flex;
+    align-items: center;
     width: 40%;
     position: relative;
     top: 8px;
+}
+
+.offcanvas-body .queue-container div p svg {
+    margin-right: 5px;
 }
 
 .offcanvas-body .queue-container div img {
