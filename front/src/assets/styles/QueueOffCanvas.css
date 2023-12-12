@@ -20,6 +20,9 @@
 .offcanvas-body .queue-container h5 {
     text-align: center;
     font-size: 14px;
+    font-weight: 600;
+    position: relative;
+    right: 10px;
 }
 
 .offcanvas-body .queue-container div {
