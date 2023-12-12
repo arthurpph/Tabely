@@ -1,0 +1,9 @@
+.notification-div {
+    position: fixed;
+    bottom: 80px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background-color: #FFFFFF;
+    animation: slideIn 0.4s ease-out;
+}

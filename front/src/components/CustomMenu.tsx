@@ -28,7 +28,7 @@ function CustomMenu(props: CustomMenuProps) {
                 <div className="custom-context-menu" id="customContextMenu" style={{ position: 'fixed', left: contextMenuPosition.x, top: contextMenuPosition.y }}>
                     {menuItems.map((item, index) => (
                         <div className={`custom-context-menu-item child ${item.subMenu ? 'has-submenu' : ''}`} key={index}>
-                            <span onMouseEnter={() => setHoveredMenuItem(index)} onClick={() => handleMenuItemClick(item)}>
+                            <span onMouseEnter={() => setHoveredMenuItem(index)} onClick={() => handleMenuItemClick(item)} style={{ color: '#FFFFFF' }}>
                                 {item.text}
                             </span>
                             {item.subMenu && hoveredMenuItem === index && (

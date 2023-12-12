@@ -147,7 +147,6 @@
 }
 
 @media screen and (max-width: 600px){
-
     .playerinfo #musictimerange {
         width: 5rem;
     }
@@ -186,7 +185,8 @@
 
     .queue-button {
         position: absolute;
-        bottom: 15px;
+        bottom: 0;
+        right: 0;
     }
 
     .play-button {

@@ -14,6 +14,7 @@ import Button from 'react-bootstrap/Button';
 import '../assets/styles/Player.css';
 
 let setMusic: (music: MusicStructure, buildQueueMusics?: MusicStructure[], playlistName?: string) => void;
+let addMusicToQueue: (music: MusicStructure) => void;
 
 function Player() {
     const [playButtonImage, setPlayImageButton] = useState<string>(playButton);
@@ -93,6 +94,10 @@ function Player() {
         }
 
         setQueue(newQueue);
+    }
+
+    addMusicToQueue = (music: MusicStructure): void => {
+        setQueue([music, ...queue]);
     }
 
     const changeQueue = (index: number): void => {
@@ -447,6 +452,6 @@ function Player() {
     );
 }
 
-export { setMusic }
+export { setMusic, addMusicToQueue }
 
 export default Player;

@@ -4,12 +4,13 @@ import { MusicStructure } from "../interfaces/musicStructure";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
-import { setMusic } from "../components/Player";
+import { addMusicToQueue, setMusic } from "../components/Player";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import CustomMenu from "../components/CustomMenu";
 import UpdatePlaylistModal from "../components/UpdatePlaylistModal";
 import SearchMusicModal from "../components/SearchMusicModal";
+import Notification from "../components/Notification";
 import "../assets/styles/Playlist.css"
 
 function Playlist() {
@@ -21,19 +22,37 @@ function Playlist() {
     const [playlistOwnerId, setPlaylistOwnerId] = useState<string>('');
     const [playlistMusics, setPlaylistMusics] = useState<MusicStructure[]>([]);
     const [playlistImageURL, setPlaylistImageURL] = useState<string>('');
-    const [contextMenuVisible, setContextMenuVisible] = useState<boolean>(false);
-    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+    const [deletePlaylistContextMenuVisible, setDeletePlaylistContextMenuVisible] = useState<boolean>(false);
+    const [deletePlaylistContextMenuPosition, setDeletePlaylistContextMenuPosition] = useState({ x: 0, y: 0 });
     const [showUpdatePlaylistModel, setShowUpdatePlaylistModel] = useState<boolean>(false);
     const [showSearchMusicModel, setShowSearchMusicModel] = useState<boolean>(false);
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+    const [addToQueueContextMenuPosition, setAddToQueueContextMenuPosition] = useState({ x: 0, y: 0});
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [musicContextMenuVisible, setMusicContextMenuVisible] = useState<boolean[]>(Array(playlistMusics.length).fill(false));
+    const [showNotification, setShowNotification] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const navigate = useNavigate();
 
-    const handleContextMenu = (e: React.MouseEvent<HTMLParagraphElement>) => {
+    const handleDeletePlaylistContextMenu = (e: React.MouseEvent<HTMLParagraphElement>) => {
         e.preventDefault();
-        setContextMenuVisible(true);
-        setContextMenuPosition({ x: e.clientX, y: e.clientY });
+        setDeletePlaylistContextMenuVisible(true);
+        setDeletePlaylistContextMenuPosition({ x: e.clientX, y: e.clientY });
+    }
+
+    const handleAddToQueueContextMenu = (e: React.MouseEvent<HTMLParagraphElement>, index: number) => {
+        e.preventDefault();
+        const updatedVisibility = [...musicContextMenuVisible];
+        updatedVisibility[index] = true;
+        setMusicContextMenuVisible(updatedVisibility);
+        setAddToQueueContextMenuPosition({ x: e.clientX, y: e.clientY });
+    }
+
+    const closeContextMenu = () => {
+        setDeletePlaylistContextMenuVisible(false);
+        const temp = [...musicContextMenuVisible];
+        temp.fill(false);
+        setMusicContextMenuVisible(temp);
     }
 
     const deletePlaylist = async () => {
@@ -109,10 +128,10 @@ function Playlist() {
     }, [])
 
     return (
-        <div onClick={() => setContextMenuVisible(false)}>
+        <div>
             <Navbar/>
                 {IsPlaylistLoaded ?
-                    <div className="playlist-container">
+                    <div className="playlist-container" onClick={closeContextMenu}>
                         <div className="playlist-info">
                             {!playlistImageURL ? 
                                 <button className="playlist-image-icon" onClick={handleChangeImageClick}>
@@ -141,17 +160,24 @@ function Playlist() {
                             }
                             <div className="playlist-info-name">
                                 <div>
-                                    <p className="playlist-info-playlist-name" style={{ cursor: 'pointer' }} onContextMenu={handleContextMenu} onClick={() => setShowUpdatePlaylistModel(true)}>{playlistName}</p>
+                                    <p 
+                                        className="playlist-info-playlist-name" 
+                                        style={{ cursor: 'pointer' }} 
+                                        onContextMenu={handleDeletePlaylistContextMenu} 
+                                        onClick={() => setShowUpdatePlaylistModel(true)}
+                                    >
+                                        {playlistName}
+                                    </p>
                                     {windowWidth <= 600 && <svg onClick={deletePlaylist} fill="#000000" version="1.1" id="Capa_1" className="trash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 408.483 408.483"><g id="SVGRepo_bgCarrier"></g><g id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M87.748,388.784c0.461,11.01,9.521,19.699,20.539,19.699h191.911c11.018,0,20.078-8.689,20.539-19.699l13.705-289.316 H74.043L87.748,388.784z M247.655,171.329c0-4.61,3.738-8.349,8.35-8.349h13.355c4.609,0,8.35,3.738,8.35,8.349v165.293 c0,4.611-3.738,8.349-8.35,8.349h-13.355c-4.61,0-8.35-3.736-8.35-8.349V171.329z M189.216,171.329 c0-4.61,3.738-8.349,8.349-8.349h13.355c4.609,0,8.349,3.738,8.349,8.349v165.293c0,4.611-3.737,8.349-8.349,8.349h-13.355 c-4.61,0-8.349-3.736-8.349-8.349V171.329L189.216,171.329z M130.775,171.329c0-4.61,3.738-8.349,8.349-8.349h13.356 c4.61,0,8.349,3.738,8.349,8.349v165.293c0,4.611-3.738,8.349-8.349,8.349h-13.356c-4.61,0-8.349-3.736-8.349-8.349V171.329z"></path> <path d="M343.567,21.043h-88.535V4.305c0-2.377-1.927-4.305-4.305-4.305h-92.971c-2.377,0-4.304,1.928-4.304,4.305v16.737H64.916 c-7.125,0-12.9,5.776-12.9,12.901V74.47h304.451V33.944C356.467,26.819,350.692,21.043,343.567,21.043z"></path> </g> </g> </g></svg>}
                                 </div>
-                                <CustomMenu contextMenuVisible={contextMenuVisible} contextMenuPosition={contextMenuPosition} menuItems={[{ text: 'Delete Playlist', function: deletePlaylist }]}/>
+                                <CustomMenu contextMenuVisible={deletePlaylistContextMenuVisible} contextMenuPosition={deletePlaylistContextMenuPosition} menuItems={[{ text: 'Delete Playlist', function: deletePlaylist }]}/>
                                 <button className="playlist-info-owner-name-button" onClick={() => navigate(`/user?userId=${playlistOwnerId}`)}><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
                             </div>
                         </div>
                         <button id="add-music-button" onClick={() => setShowSearchMusicModel(true)}>Add Music</button>
                         <div className="musics-container">
                             {playlistMusics.map((music, index) => (
-                                <div key={index}>
+                                <div key={index} onContextMenu={(e) => handleAddToQueueContextMenu(e, index)} className="music-container">
                                     <span className="counter">{index + 1}</span>
                                     <img 
                                         src={music.imageURL} 
@@ -179,6 +205,8 @@ function Playlist() {
                                         <p>{music.name}</p>
                                         <span>{music.artist}</span>
                                     </div>
+                                    <svg onClick={() => { addMusicToQueue(music); setShowNotification(true)} } data-encore-id="icon" role="img" aria-hidden="true" viewBox="0 0 16 16" className="Svg-sc-ytk21e-0 dCszzJ add-to-queue"><path d="M16 15H2v-1.5h14V15zm0-4.5H2V9h14v1.5zm-8.034-6A5.484 5.484 0 0 1 7.187 6H13.5a2.5 2.5 0 0 0 0-5H7.966c.159.474.255.978.278 1.5H13.5a1 1 0 1 1 0 2H7.966zM2 2V0h1.5v2h2v1.5h-2v2H2v-2H0V2h2z"></path></svg>
+                                    <CustomMenu contextMenuVisible={musicContextMenuVisible[index]} contextMenuPosition={addToQueueContextMenuPosition} menuItems={[{ text: 'Add to Queue', function: () => addMusicToQueue(music) }]} />
                                 </div>
                             ))}
                         </div>
@@ -209,7 +237,8 @@ function Playlist() {
             {playlistImageURL && 
                 <img className="background-image" src={playlistImageURL}/>
             }
-
+            
+            <Notification text={'Added to Queue'} showNotification={showNotification} setShowNotification={setShowNotification} />
             <UpdatePlaylistModal showUpdatePlaylistModal={showUpdatePlaylistModel} setShowUpdatePlaylistModal={setShowUpdatePlaylistModel} setPlaylistName={setPlaylistName}/>
             <SearchMusicModal showSearchMusicModal={showSearchMusicModel} setShowSearchMusicModal={setShowSearchMusicModel} getPlaylistInfo={getPlaylistInfo}/>
         </div>
