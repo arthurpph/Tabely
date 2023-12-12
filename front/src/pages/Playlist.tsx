@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { MusicStructure } from "../interfaces/musicStructure";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faLaptopFile, faPlay } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 import { addMusicToQueue, setMusic } from "../components/Player";
+import { audioDB } from "../App";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import CustomMenu from "../components/CustomMenu";
 import UpdatePlaylistModal from "../components/UpdatePlaylistModal";
 import SearchMusicModal from "../components/SearchMusicModal";
 import Notification from "../components/Notification";
+import DownloadIcon from '../assets/images/DownloadIcon.png';
 import "../assets/styles/Playlist.css"
 
 function Playlist() {
@@ -31,6 +33,7 @@ function Playlist() {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [musicContextMenuVisible, setMusicContextMenuVisible] = useState<boolean[]>(Array(playlistMusics.length).fill(false));
     const [showNotification, setShowNotification] = useState<boolean>(false);
+    const [musicsDownloaded, setMusicsDownloaded] = useState<boolean[]>(Array(playlistMusics.length).fill(false));
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const navigate = useNavigate();
 
@@ -87,6 +90,18 @@ function Playlist() {
         setIsPlaylistLoaded(true);
     }
 
+    const downloadPlaylistMusics = () => {
+        playlistMusics.forEach(async (music, index) => {
+            const response = await axios.get(music.musicURL, { responseType: 'blob' });
+            if(response) {
+                await audioDB.addData(music.name, response.data);
+                const temp = [...musicsDownloaded];
+                temp[index] = true;
+                setMusicsDownloaded(temp);
+            }
+        });
+    }
+
     const getPlaylistInfo = async (): Promise<void> => {
         try {
             setIsPlaylistLoaded(false);
@@ -100,6 +115,7 @@ function Playlist() {
             setPlaylistName(playlistData.name);
             setPlaylistMusics(playlistData.musics);
             setPlaylistImageURL(playlistData.imageURL);
+            setMusicsDownloaded(Array(playlistData.musics.length).fill(false));
 
             const user = await axios.get(`${import.meta.env.VITE_API_URL}/user/${playlistData.ownerId}`);
             const userData = user.data;
@@ -125,7 +141,19 @@ function Playlist() {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        const temp = [...musicsDownloaded];
+        playlistMusics.forEach(async (music, index) => {
+            const response = await audioDB.checkIfKeyExists(music.name);
+            if(response) {
+                temp[index] = true;
+            }
+        });
+
+        setMusicsDownloaded(temp);
+    }, [playlistMusics]);
 
     return (
         <div>
@@ -172,6 +200,13 @@ function Playlist() {
                                 </div>
                                 <CustomMenu contextMenuVisible={deletePlaylistContextMenuVisible} contextMenuPosition={deletePlaylistContextMenuPosition} menuItems={[{ text: 'Delete Playlist', function: deletePlaylist }]}/>
                                 <button className="playlist-info-owner-name-button" onClick={() => navigate(`/user?userId=${playlistOwnerId}`)}><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
+                                {musicsDownloaded.every(boolean => boolean === true) ?
+                                    <svg style={{ width: '2rem' }} className="playlist-downloaded" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"></g><g id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path d="M31.667 45.024V18.024" stroke="#426AB2"></path> <path d="M22.667 39.024L31.667 45.024L40.666 39.024" stroke="#426AB2"></path> <path d="M31.667 58.191C46.3948 58.191 58.334 46.2518 58.334 31.5241C58.334 16.7963 46.3948 4.85706 31.667 4.85706C16.9392 4.85706 5 16.7963 5 31.5241C5 46.2518 16.9392 58.191 31.667 58.191Z" stroke="#000000"></path> </g></svg>
+                                :
+                                    <button className="musicdownload" onClick={downloadPlaylistMusics}>
+                                        <img src={DownloadIcon}/>
+                                    </button>
+                                }
                             </div>
                         </div>
                         <button id="add-music-button" onClick={() => setShowSearchMusicModel(true)}>Add Music</button>
@@ -203,7 +238,14 @@ function Playlist() {
                                     />
                                     <div>
                                         <p>{music.name}</p>
-                                        <span>{music.artist}</span>
+                                        {musicsDownloaded[index] ?
+                                            <div>
+                                                <svg style={{ minWidth: '1.5rem', width: '1.5rem' }} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"></g><g id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path d="M31.667 45.024V18.024" stroke="#426AB2"></path> <path d="M22.667 39.024L31.667 45.024L40.666 39.024" stroke="#426AB2"></path> <path d="M31.667 58.191C46.3948 58.191 58.334 46.2518 58.334 31.5241C58.334 16.7963 46.3948 4.85706 31.667 4.85706C16.9392 4.85706 5 16.7963 5 31.5241C5 46.2518 16.9392 58.191 31.667 58.191Z" stroke="#000000"></path> </g></svg>
+                                                <span>{music.artist}</span>
+                                            </div>
+                                        :
+                                            <span>{music.artist}</span>
+                                        }  
                                     </div>
                                     {windowWidth <= 600 && <svg onClick={() => { addMusicToQueue(music); setShowNotification(true)} } data-encore-id="icon" role="img" aria-hidden="true" viewBox="0 0 16 16" className="Svg-sc-ytk21e-0 dCszzJ add-to-queue"><path d="M16 15H2v-1.5h14V15zm0-4.5H2V9h14v1.5zm-8.034-6A5.484 5.484 0 0 1 7.187 6H13.5a2.5 2.5 0 0 0 0-5H7.966c.159.474.255.978.278 1.5H13.5a1 1 0 1 1 0 2H7.966zM2 2V0h1.5v2h2v1.5h-2v2H2v-2H0V2h2z"></path></svg>}
                                     <CustomMenu contextMenuVisible={musicContextMenuVisible[index]} contextMenuPosition={addToQueueContextMenuPosition} menuItems={[{ text: 'Add to Queue', function: () => { addMusicToQueue(music); setShowNotification(true) } }]} />

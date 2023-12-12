@@ -15,6 +15,7 @@ import '../assets/styles/Player.css';
 
 let setMusic: (music: MusicStructure, buildQueueMusics?: MusicStructure[], playlistName?: string) => void;
 let addMusicToQueue: (music: MusicStructure) => void;
+let downloadMusic: (name: string, musicURL: string) => Promise<void>;
 
 function Player() {
     const [playButtonImage, setPlayImageButton] = useState<string>(playButton);
@@ -34,7 +35,7 @@ function Player() {
     const [currentPlaylist, setCurrentPlaylist] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    const downloadMusic = async (name: string, musicURL: string): Promise<void> => {
+    downloadMusic = async (name: string, musicURL: string): Promise<void> => {
         const music = await axios.get(musicURL, { responseType: 'blob' });
         const blobURL = URL.createObjectURL(music.data);
         setDownloadedMusics([...downloadedMusics, {
@@ -371,7 +372,7 @@ function Player() {
 
     useEffect(() => {
         if('mediaSession' in navigator) {
-            navigator.mediaSession.metadata = new window.MediaMetadata({
+            navigator.mediaSession.metadata = new MediaMetadata({
                 title: musicName || 'Unknown Music',
                 artist: musicArtist || 'Unknown Artist',
                 artwork: [
@@ -396,7 +397,7 @@ function Player() {
             });
         }
 
-    }, [musicName, musicArtist, musicImage, currentTime])
+    }, [musicName, musicArtist, musicImage, currentTime]);
 
     return (
         <div className="player" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -452,6 +453,6 @@ function Player() {
     );
 }
 
-export { setMusic, addMusicToQueue }
+export { setMusic, addMusicToQueue, downloadMusic }
 
 export default Player;

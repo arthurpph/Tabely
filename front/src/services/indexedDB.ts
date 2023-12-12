@@ -1,5 +1,3 @@
-import { toast } from "react-toastify";
-
 export class connectToIndexedDB {
     private db: IDBDatabase | null = null;
 
@@ -37,21 +35,16 @@ export class connectToIndexedDB {
 
                 const checkIfBlobAlreadyExists = objectStore.get(key);
 
-                checkIfBlobAlreadyExists.onsuccess = (e) => {
-                    if((e.target as any).result !== undefined) {
-                        toast.error('Música já está baixada');
-                    } else {
-                        const request = objectStore.add(audioData, key);
+                checkIfBlobAlreadyExists.onsuccess = () => {
+                    const request = objectStore.add(audioData, key);
 
-                        request.onsuccess = () => {
-                            resolve(`${key} downloaded`);
-                            toast.success(`Música ${key} baixada com sucesso`);
-                        };
+                    request.onsuccess = () => {
+                        resolve(`${key} downloaded`);
+                    };
 
-                        request.onerror = (event) => {
-                            reject(`Error while adding audio file: ${(event.target as IDBRequest).error}`);
-                        };
-                    }
+                    request.onerror = (event) => {
+                        reject(`Error while adding audio file: ${(event.target as IDBRequest).error}`);
+                    };
                 }
                 
                 checkIfBlobAlreadyExists.onerror = (e) => {
@@ -118,7 +111,6 @@ export class connectToIndexedDB {
 
                 deleteRequest.onsuccess = () => {
                     resolve();
-                    toast.success(`Música ${key} excluída com sucesso`);
                 };
 
                 deleteRequest.onerror = (err) => {
