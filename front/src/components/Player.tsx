@@ -286,6 +286,11 @@ function Player() {
             const audio = audioRef.current;
             if(audio) {
                 audio.addEventListener('timeupdate', () => {
+                    navigator.mediaSession.setPositionState({
+                        duration: audio.duration,
+                        playbackRate: audio.playbackRate,
+                        position: audio.currentTime,
+                    });
                     setCurrentTime(audio.currentTime);
                 });
 

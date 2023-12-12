@@ -210,6 +210,11 @@
     .trash-icon {
         width: 2rem;
     }
+
+    .playlist-downloaded {
+        position: relative;
+        right: 3rem;
+    }
 }
 
 @media screen and (max-height: 800px) {
