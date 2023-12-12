@@ -22,6 +22,7 @@ function Player() {
     const [isMusicImageLoadad, setIsMusicImageLoaded] = useState<boolean>(false);
     const [showQueue, setShowQueue] = useState<boolean>(false);
     const [queue, setQueue] = useState<MusicStructure[]>([]);
+    const [customQueue, setCustomQueue] = useState<MusicStructure[]>([]);
     const [reproducedMusics, setReproducedMusics] = useState<MusicStructure[]>([]);
     const [currentMusicIndex, setCurrentMusicIndex] = useState<number>(-1);
     const [currentTime, setCurrentTime] = useState<number>(0);
@@ -98,7 +99,8 @@ function Player() {
     }
 
     addMusicToQueue = (music: MusicStructure): void => {
-        setQueue([music, ...queue]);
+        setQueue([]);
+        setCustomQueue([...customQueue, music]);
     }
 
     const changeQueue = (index: number): void => {
@@ -154,8 +156,7 @@ function Player() {
             const currentMusicIndexScope: number = currentMusicIndex + 1;
             setCurrentMusicIndex(currentMusicIndexScope);
             nextMusic = reproducedMusics[currentMusicIndexScope];
-        } 
-        else if(queue.length > 0) {
+        } else if(queue.length > 0) {
             nextMusic = queue[0];
             setReproducedMusics([...reproducedMusics, {
                 name: nextMusic.name,
@@ -165,6 +166,16 @@ function Player() {
                 duration: nextMusic.duration
             }]);
             setQueue(queue.length > 1 ? [...queue.slice(1)] : []);
+        } else {
+            nextMusic = customQueue[0];
+            setReproducedMusics([...reproducedMusics, {
+                name: nextMusic.name,
+                artist: nextMusic.artist,
+                imageURL: nextMusic.imageURL,
+                musicURL: nextMusic.musicURL,
+                duration: nextMusic.duration
+            }]);
+            setCustomQueue(customQueue.length > 1 ? [...customQueue.slice(1)] : []);
         }
 
         if(nextMusic) {
@@ -356,7 +367,7 @@ function Player() {
                     }
                     setFirstMusicSetup(false);
                 }
-            } else if(queue.length === 0) {
+            } else if(customQueue.length === 0) {
                 buildQueue(await getMusics());
             }
         }
@@ -445,6 +456,7 @@ function Player() {
                             setMusic={setMusic}
                             changeQueue={changeQueue}
                             currentPlaylist={currentPlaylist}
+                            customQueue={customQueue}
                         />
                     </div>
                 </div>
