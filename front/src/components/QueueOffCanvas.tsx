@@ -3,9 +3,7 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { audioDB } from '../App';
 import { MusicStructure } from '../interfaces/musicStructure';
-import axios from 'axios';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import DownloadIcon from '../assets/images/DownloadIcon.png';
 import '../assets/styles/QueueOffCanvas.css';
 
 interface QueueOffCanvasProps {
