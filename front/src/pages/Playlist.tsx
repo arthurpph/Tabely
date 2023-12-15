@@ -214,9 +214,9 @@ function Playlist() {
                                 </div>
                                 <CustomMenu contextMenuVisible={deletePlaylistContextMenuVisible} contextMenuPosition={deletePlaylistContextMenuPosition} menuItems={[{ text: 'Delete Playlist', function: deletePlaylist }]}/>
                                 <button className="playlist-info-owner-name-button" onClick={() => navigate(`/user?userId=${playlistOwnerId}`)}><p className="playlist-info-owner-name">{playlistOwnerName}</p></button>
-                                {musicsDownloaded.every(boolean => boolean) ?
+                                {musicsDownloaded.length > 0 && musicsDownloaded.every(boolean => boolean) ?
                                     <svg style={{ width: '2rem' }} className="playlist-downloaded" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier"></g><g id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path d="M31.667 45.024V18.024" stroke="#426AB2"></path> <path d="M22.667 39.024L31.667 45.024L40.666 39.024" stroke="#426AB2"></path> <path d="M31.667 58.191C46.3948 58.191 58.334 46.2518 58.334 31.5241C58.334 16.7963 46.3948 4.85706 31.667 4.85706C16.9392 4.85706 5 16.7963 5 31.5241C5 46.2518 16.9392 58.191 31.667 58.191Z" stroke="#000000"></path> </g></svg>
-                                :
+                                : musicsDownloaded.length > 0 &&
                                     <>
                                         <TailSpin
                                             height="80"
